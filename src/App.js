@@ -20,6 +20,7 @@ import FeedBack from './components/StaffPanel/staff_feedback';
 import Profile from './components/StaffPanel/staff_profile';
 import TakeAttendance from './components/StaffPanel/staff_take_attendance';
 import UpdateAttendance from './components/StaffPanel/staff_update_attendance';
+import StudentHome from './components/StudentPanel/student_home_template';
 
 const App =()=>(
   <Provider store={store}>
@@ -45,6 +46,9 @@ const App =()=>(
         <Route exact path='/staffprofile' component={Profile} />
         <Route exact path='/safftakeattendance' component={TakeAttendance} />
         <Route exact path='/staffupdateattendance' component={UpdateAttendance} />
+        </Switch>
+      <Switch>
+      <Route exact path='/studenthome' component={StudentHome}/>
       </Switch>
     </Router>
   </Provider>

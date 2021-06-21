@@ -3,12 +3,8 @@ import { connect } from 'react-redux';
 import {checkAuthenticated,load_user} from '../actions/auth';
 import NavBar from '../components/NavBar';
 import AdminPanel from '../components/AdminPanel/Adminpanel';
-import StaffHome from '../components/StaffPanel/staff_home_template';
-
-import StudentPanel from '../components/StudentPanel/StudentPanel';
-import Base from '../components/StaffPanel/base_template';
-import Dashboard from '../components/StaffPanel/Dashboard';
-import EditStudent from '../components/StaffPanel/edit_student_result';
+import StudentHome from '../components/StudentPanel/student_home_template';
+import StudentBase from '../components/StudentPanel/base_template'
 import { Link, Redirect } from 'react-router-dom';
 const Layout=({ checkAuthenticated, load_user,who, children })=>{
     useEffect(()=>{
@@ -44,10 +40,13 @@ const Layout=({ checkAuthenticated, load_user,who, children })=>{
     }
     if(who==="3"){
         return(
-            <div>
-                <NavBar/>
-                <StudentPanel/>
-            </div>
+            // <div>
+            //     <NavBar/>
+            //     <StudentHome/>
+                
+                
+            // </div>
+            <Redirect to= "/studenthome" />
         )
     }
     else{
