@@ -2,7 +2,6 @@ import React from 'react';
 const StudentSideBar=()=>{
   return(
 <div>
-  
   <aside className="main-sidebar sidebar-dark-primary elevation-4">
     
     <a href className="brand-link">
@@ -24,7 +23,7 @@ const StudentSideBar=()=>{
          
           <li className="nav-item">
             
-            <a href="{{ student_home }}" className="nav-link {% if request.path == student_home %} active {% endif %}">
+            <a href="${}" className="nav-link active">
               <i className="nav-icon fas fa-th" />
               <p>
                 Home
