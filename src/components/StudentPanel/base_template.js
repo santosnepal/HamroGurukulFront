@@ -49,9 +49,9 @@ return(
       
     </nav>
    
-    <div className="sidebar">
+    
     <StudentSideBar/>
-    </div>
+    
     
    
   </div>

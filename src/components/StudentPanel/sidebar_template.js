@@ -1,4 +1,11 @@
 import React from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import store from '../../store';
+const loadUserName=()=>{
+ const  state=store.getState();
+ return(`${state.auth.user.first_name} ${state.auth.user.last_name}`);
+}
+
 const StudentSideBar=()=>{
   return(
 <div>
@@ -14,7 +21,7 @@ const StudentSideBar=()=>{
       <div className="user-panel mt-3 pb-3 mb-3 d-flex">
         
         <div className="info">
-          <a href="#" className="d-block"> user.username </a>
+          <a href="#" className="d-block">{loadUserName()} </a>
         </div>
       </div>
       
@@ -23,57 +30,57 @@ const StudentSideBar=()=>{
          
           <li className="nav-item">
             
-            <a href="${}" className="nav-link active">
+            <Link  to="/studenthome" className="nav-link">
               <i className="nav-icon fas fa-th" />
               <p>
                 Home
               </p>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
            
-            <a href="{{ student_view_attendance }}" className="nav-link ">
+            <Link to="/studentviewattendance" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
                 View Attendance
               </p>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
              
-            <a href="{{ student_apply_leave }}" className="nav-link ">
+            <Link to="/studentapplyleave" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
                 Apply for Leave
               </p>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
              
-            <a href="{{ student_feedback }}" className="nav-link ">
+            <Link to="/studentfeedback" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
                 Feedback Message
               </p>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
                
-            <a href="{{ student_view_result }}" className="nav-link ">
+            <Link to="/studentviewresult" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
                 Grade Card
               </p>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
                
-            <a href="{{ student_all_notification }}" className="nav-link ">
+            <Link to="/studentviewnotification" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
                 Notifications
               </p>
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

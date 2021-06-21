@@ -23,8 +23,8 @@ return(
 <div className="hold-transition sidebar-mini layout-fixed">
   <StudentBase/>
   </div>
+  <div className="content-wrapper">
   <section className="content">
-    
       <div className="row">
         <div className="col-lg-3 col-6">
           {/* small box */}
@@ -44,7 +44,7 @@ return(
           {/* small box */}
           <div className="small-box bg-success">
             <div className="inner">
-              <h3>{'{'}{'{'} attendance_absent {'}'}{'}'}</h3>
+              <h3> attendance_absent </h3>
               <p>Absent</p>
             </div>
             <div className="icon">
@@ -123,6 +123,7 @@ return(
       </div>
     
   </section>
+  </div>
   <Footer/>
 </div>
 );
