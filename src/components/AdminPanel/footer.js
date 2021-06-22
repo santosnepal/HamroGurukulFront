@@ -11,6 +11,6 @@ export default class Footer extends Component {
   </footer>
 </div>
 
-        )
+        );
     }
 }

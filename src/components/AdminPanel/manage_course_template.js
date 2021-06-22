@@ -1,36 +1,17 @@
-import React, { useState } from 'react';
-import {Link,Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { logout } from '../../actions/auth';
-import StudentBase from './base_template';
-import Footer from './footer';
-const StudentNotification = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
-  }
-return(
 <div>
-<div className="hold-transition sidebar-mini layout-fixed">
-  <StudentBase/>
-  </div>
-  <div className="content-wrapper">
+  {'{'}% extends 'hod_template/base_template.html' %{'}'}
+  {'{'}% block page_title %{'}'}
+  Manage Course
+  {'{'}% endblock page_title %{'}'}
+  {'{'}% block main_content %{'}'}
+  {/* Main content */}
   <section className="content">
     <div className="container-fluid">
       <div className="row">
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title">All Notifications</h3>
+              <h3 className="card-title">Course Details</h3>
               <div className="card-tools">
                 <div className="input-group input-group-sm" style={{width: 150}}>
                   <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
@@ -42,16 +23,20 @@ return(
             </div>
             {/* /.card-header */}
             <div className="card-body table-responsive p-0">
-              {'{'}% for notification in notifications %{'}'}
+              {'{'}% for course in courses %{'}'}
               {'{'}% endfor %{'}'}
               <table className="table table-hover text-nowrap">
                 <thead>
                   <tr>
-                    <th>Notifications</th>
+                    <th>ID</th>
+                    <th>Course Name</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody><tr>
-                    <td>{'{'}{'{'} notification.message {'}'}{'}'}</td>
+                    <td>{'{'}{'{'} course.id {'}'}{'}'}</td>
+                    <td>{'{'}{'{'} course.course_name {'}'}{'}'}</td>
+                    <td><a href="/edit_course/{{ course.id }}" className="btn btn-success">Edit</a></td>
                   </tr></tbody>
               </table>
             </div>
@@ -62,12 +47,6 @@ return(
       </div>
     </div>
   </section>
-  </div>
-  <Footer/>
+  {/* /.content */}
+  {'{'}% endblock main_content %{'}'}
 </div>
-);
-}
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
-export default connect( mapStateToProps, { logout })(StudentNotification);

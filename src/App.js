@@ -21,6 +21,12 @@ import Profile from './components/StaffPanel/staff_profile';
 import TakeAttendance from './components/StaffPanel/staff_take_attendance';
 import UpdateAttendance from './components/StaffPanel/staff_update_attendance';
 import StudentHome from './components/StudentPanel/student_home_template';
+import StudentApplyLeave from './components/StudentPanel/student_apply_leave';
+import StudentViewAttendance from './components/StudentPanel/student_attendance_data';
+import StudentFeedback from './components/StudentPanel/student_feedback';
+import StudentResult from './components/StudentPanel/student_result';
+import StudentAttendancePost from './components/StudentPanel/student_view_attendance';
+import StudentNotification from './components/StudentPanel/all_notification';
 
 const App =()=>(
   <Provider store={store}>
@@ -49,6 +55,14 @@ const App =()=>(
         </Switch>
       <Switch>
       <Route exact path='/studenthome' component={StudentHome}/>
+      <Route exact path='/studentapplyleave' component={StudentApplyLeave}/>
+      <Route exact path='/studentviewattendance' component={StudentViewAttendance}/>
+      <Route exact path='/studentfeedback' component={StudentFeedback}/>
+      <Route exact path='/studentviewresult' component={StudentResult}/>
+      <Route exact path='/studentviewattendancedata' component={StudentAttendancePost}/>
+      <Route exact path='/studentviewnotification' component={StudentNotification}/> 
+
+
       </Switch>
     </Router>
   </Provider>

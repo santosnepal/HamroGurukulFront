@@ -1,13 +1,30 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import StudentBase from './base_template';
+import Footer from './footer';
+const StudentViewAttendance = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+return(
 <div>
-  {'{'}% extends 'student_template/base_template.html' %{'}'}
-  {'{'}% block custom_css %{'}'}
-  <style dangerouslySetInnerHTML={{__html: "\n.col-lg-3.attendance_div_red {\n    padding: 10px;\n    padding-top: 20px;\n    padding-bottom: 20px;\n    background: #f44336;\n    border: 10px solid white;\n    text-align: center;\n    color: #fff;\n    border-radius: 30px;\n    box-shadow: 1px 1px 1px grey;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n.col-lg-3.attendance_div_green {\n    padding: 10px;\n    padding-top: 20px;\n    padding-bottom: 20px;\n    background: #388e3c;\n    border: 10px solid white;\n    text-align: center;\n    color: #fff;\n    border-radius: 30px;\n    box-shadow: 1px 1px 1px grey;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n" }} />
-  {'{'}% endblock custom_css %{'}'}
-  {'{'}% block page_title %{'}'}
-  Attendance Data
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini layout-fixed">
+  <StudentBase/>
+  </div>
+  <div className="content-wrapper">
+ {/* Main content */}
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -21,32 +38,36 @@
             {/* form start */}
             <div className="card-body">
               <div className="row">
-                {'{'}% if attendance_reports %{'}'}
-                {'{'}% for attendance_report in attendance_reports %{'}'}
-                {'{'}% if attendance_report.status == True %{'}'}
+                
                 <div className="col-lg-3 attendance_div_green">
-                  <b>Date : {'{'}{'{'} attendance_report.attendance_id.attendance_date {'}'}{'}'}</b>
+                  <b>Date </b>
                   <br />
-                  <b>[ Status : Present ]</b>
+                  <b> Status : Present </b>
                 </div>
-                {'{'}% else %{'}'}
+               
                 <div className="col-lg-3 attendance_div_red">
-                  <b>Date : {'{'}{'{'} attendance_report.attendance_id.attendance_date {'}'}{'}'}</b>
+                  <b>Date </b>
                   <br />
-                  <b>[ Status : Absent ]</b>
+                  <b> Status : Absent </b>
                 </div>
-                {'{'}% endif %{'}'}
-                {'{'}% endfor %{'}'}
-                {'{'}% else %{'}'}
+                
+               
                 <div className="alert alert-danger text-center">No Attendance Data Found!</div>
-                {'{'}% endif %{'}'}
+                
               </div>
             </div>
             {/* /.card */}
           </div>
         </div>
       </div>
-    </div></section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-</div>
+    </div>
+    </section>
+ </div>
+ <Footer/>
+ </div>
+);
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+export default connect( mapStateToProps, { logout })(StudentViewAttendance);

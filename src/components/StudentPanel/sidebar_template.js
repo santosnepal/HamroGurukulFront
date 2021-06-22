@@ -42,7 +42,16 @@ const StudentSideBar=()=>{
             <Link to="/studentviewattendance" className="nav-link ">
               <i className="nav-icon fas fa-th" />
               <p>
-                View Attendance
+                View All  Attendance
+              </p>
+            </Link>
+          </li>
+          <li className="nav-item">
+           
+            <Link to="/studentviewattendancedata" className="nav-link ">
+              <i className="nav-icon fas fa-th" />
+              <p>
+                Search Attendance
               </p>
             </Link>
           </li>
