@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const ManageStudent = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Manage Student
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -23,8 +48,7 @@
             </div>
             {/* /.card-header */}
             <div className="card-body table-responsive p-0">
-              {'{'}% for student in students %{'}'}
-              {'{'}% endfor %{'}'}
+              
               <table className="table table-hover text-nowrap">
                 <thead>
                   <tr>
@@ -44,19 +68,19 @@
                   </tr>
                 </thead>
                 <tbody><tr>
-                    <td>{'{'}{'{'} student.admin.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.first_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.last_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.username {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.email {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.address {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.gender {'}'}{'}'}</td>
-                    <td><img src="{{ student.profile_pic }}" style={{width: 100}} /></td>
-                    <td>{'{'}{'{'} student.session_year_id.session_start_year {'}'}{'}'} TO {'{'}{'{'} student.session_year_id.session_end_year {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.course_id.course_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.last_login {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.date_joined {'}'}{'}'}</td>
-                    <td><a href="{% url 'edit_student' student_id=student.admin.id %}" className="btn btn-success">Edit</a></td>
+                    <td>id </td>
+                    <td>first_name </td>
+                    <td>last_name </td>
+                    <td>username </td>
+                    <td>email </td>
+                    <td> address </td>
+                    <td> gender </td>
+                    <td><img src="{{ profile_pic }}" style={{width: 100}} /></td>
+                    <td> Session start to end </td>
+                    <td> course_name </td>
+                    <td>last_login </td>
+                    <td>date_joined </td>
+                    <td><Link to="#" className="btn btn-success">Edit</Link></td>
                   </tr></tbody>
               </table>
             </div>
@@ -67,6 +91,18 @@
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(ManageStudent);

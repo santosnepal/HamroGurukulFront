@@ -1,10 +1,43 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+import { signup } from '../../actions/auth';
+
+const AddStaff = ({signup,isAuthenticated  })=>{
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [formData, setFormData] = useState({
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      re_password: '',
+      user_types:'',
+  });
+
+  const { first_name, last_name, email, password, re_password,user_types } = formData;
+
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = e => {
+      e.preventDefault();
+
+      if (password === re_password) {
+          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2');
+          setAccountCreated(true);
+      }
+  };
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Add Staff
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -12,63 +45,67 @@
           {/* general form elements */}
           <div className="card card-primary">
             <div className="card-header">
-              <h3 className="card-title">Add Staff</h3>
+              <h2 className="card-title">Add a new Staff</h2>
             </div>
             {/* /.card-header */}
             {/* form start */}
-            <form role="form" action="/add_staff_save" method="post">
-              {'{'}% csrf_token %{'}'}
-              <div className="card-body">
-                <div className="form-group">
-                  <label>Email address</label>
-                  <input type="email" className="form-control" name="email" placeholder="Enter email" id="id_email" autoComplete="off" />
+            <div className='container mt-5'>
+            
+            <p>Create New  Account For your staff</p>
+             
+            <form onSubmit={e => onSubmit(e)}>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder='First Name*'
+                        name='first_name'
+                        value={first_name}
+                        onChange={e => onChange(e)}
+                        required
+                    />
                 </div>
-                <div className="form-group">
-                  <label>Password</label>
-                  <input type="password" className="form-control" placeholder="Password" name="password" />
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder='Last Name*'
+                        name='last_name'
+                        value={last_name}
+                        onChange={e => onChange(e)}
+                        required
+                    />
                 </div>
-                <div className="form-group">
-                  <label>First Name</label>
-                  <input type="text" className="form-control" placeholder="First Name" name="first_name" />
-                </div>
-                <div className="form-group">
-                  <label>Last Name</label>
-                  <input type="text" className="form-control" placeholder="Last Name" name="last_name" />
-                </div>
-                <div className="form-group">
-                  <label>Username</label>
-                  <input type="text" className="form-control" placeholder="Username" name="username" id="id_username" autoComplete="off" />
-                </div>
-                <div className="form-group">
-                  <label>Address</label>
-                  <input type="text" className="form-control" placeholder="Address" name="address" />
-                </div>
-                <div className="form-group">
-                  {'{'}% if messages %{'}'}
-                  {'{'}% for message in messages %{'}'}
-                  {'{'}% if message.tags == 'error' %{'}'}
-                  <div className="alert alert-danger" style={{marginTop: 10}}>{'{'}{'{'} message {'}'}{'}'}</div>
-                  {'{'}% endif %{'}'}
-                  {'{'}% if message.tags == 'success' %{'}'}
-                  <div className="alert alert-success" style={{marginTop: 10}}>{'{'}{'{'} message {'}'}{'}'}</div>
-                  {'{'}% endif %{'}'}
-                  {'{'}% endfor %{'}'}
-                  {'{'}% endif %{'}'}
-                </div>
-              </div>
-              {/* /.card-body */}
-              <div className="card-footer">
-                <button type="submit" className="btn btn-primary btn-block">Add Staff</button>
-              </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='email'
+                        placeholder='Email*'
+                        name='email'
+                        value={email}
+                        onChange={e => onChange(e)}
+                        required
+                    />
+               </div>
+                <button className='btn btn-primary' type='submit'>Register</button>
             </form>
+            <p className='mt-3'>
+                
+            </p>
+        </div>
           </div>
           {/* /.card */}
         </div>
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-  {'{'}% block custom_js %{'}'}
-  {'{'}% endblock custom_js %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { signup  })(AddStaff);

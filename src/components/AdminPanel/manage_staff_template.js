@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const ManageStaffs = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Manage Staff
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -21,10 +46,9 @@
                 </div>
               </div>
             </div>
-            {/* /.card-header */}
+            
             <div className="card-body table-responsive p-0">
-              {'{'}% for staff in staffs %{'}'}
-              {'{'}% endfor %{'}'}
+             
               <table className="table table-hover text-nowrap">
                 <thead>
                   <tr>
@@ -40,25 +64,37 @@
                   </tr>
                 </thead>
                 <tbody><tr>
-                    <td>{'{'}{'{'} staff.admin.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.first_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.last_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.username {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.email {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.address {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.last_login {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} staff.admin.date_joined {'}'}{'}'}</td>
-                    <td><a href="/edit_staff/{{ staff.admin.id }}" className="btn btn-success">Edit</a></td>
+                    <td> id </td>
+                    <td> first_name </td>
+                    <td> last_name </td>
+                    <td> username </td>
+                    <td> email </td>
+                    <td> staff.address </td>
+                    <td> last_login </td>
+                    <td> date_joined </td>
+                    <td><Link to="#" className="btn btn-success">Edit</Link></td>
                   </tr></tbody>
               </table>
             </div>
-            {/* /.card-body */}
+            
           </div>
-          {/* /.card */}
+          
         </div>
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(ManageStaffs);

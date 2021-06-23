@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const StudentLeaveAdmin = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Student Apply for Leave
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -17,8 +42,7 @@
             {/* /.card-header */}
             {/* form start */}
             <div className="table">
-              {'{'}% for leave in leaves %{'}'}
-              {'{'}% endfor %{'}'}
+              
               <table className="table">
                 <tbody><tr>
                     <th>ID</th>
@@ -29,21 +53,19 @@
                     <th>Apply On</th>
                     <th>Action</th>
                   </tr><tr>
-                    <td>{'{'}{'{'} leave.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} leave.student_id.admin.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} leave.student_id.admin.first_name {'}'}{'}'} {'{'}{'{'} leave.student_id.admin.last_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} leave.leave_date {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} leave.leave_message {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} leave.created_at {'}'}{'}'}</td>
+                    <td> id </td>
+                    <td> id </td>
+                    <td> first_name   last_name </td>
+                    <td> leave_date </td>
+                    <td> leave_message </td>
+                    <td> created_at </td>
                     <td>
-                      {'{'}% if leave.leave_status == 0 %{'}'}
-                      <a href="{% url 'student_approve_leave' leave_id=leave.id %}" className="btn btn-success">Approve</a>
-                      <a className="btn btn-danger" href="{% url 'student_disapprove_leave' leave_id=leave.id %}">Disapprove</a>
-                      {'{'}% elif leave.leave_status == 1  %{'}'}
+                    <Link to="#" className="btn btn-success">Approve</Link>
+                      <Link  className="btn btn-danger" to="#">Disapprove</Link>
+                      
                       <button className="btn btn-warning" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Approved</button>
-                      {'{'}% else %{'}'}
+                      
                       <button className="btn btn-danger" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Disapproved</button>
-                      {'{'}% endif %{'}'}
                     </td>
                   </tr></tbody></table>
             </div>
@@ -53,6 +75,18 @@
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(StudentLeaveAdmin);

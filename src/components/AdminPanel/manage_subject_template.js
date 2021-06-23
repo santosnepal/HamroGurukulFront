@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const ManageSubject = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Manage Subject
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -23,8 +48,7 @@
             </div>
             {/* /.card-header */}
             <div className="card-body table-responsive p-0">
-              {'{'}% for subject in subjects %{'}'}
-              {'{'}% endfor %{'}'}
+              
               <table className="table table-hover text-nowrap">
                 <thead>
                   <tr>
@@ -37,22 +61,34 @@
                   </tr>
                 </thead>
                 <tbody><tr>
-                    <td>{'{'}{'{'} subject.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} subject.subject_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} subject.course_id.course_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} subject.course_id.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} subject.staff_id.first_name {'}'}{'}'} {'{'}{'{'} subject.staff_id.last_name {'}'}{'}'}</td>
-                    <td><a href="/edit_subject/{{ subject.id }}" className="btn btn-success">Edit</a></td>
+                    <td>id</td>
+                    <td>subject_name</td>
+                    <td>course_name</td>
+                    <td>id</td>
+                    <td>first_name  last_name</td>
+                    <td><Link to="#" className="btn btn-success">Edit</Link></td>
                   </tr></tbody>
               </table>
             </div>
-            {/* /.card-body */}
+            
           </div>
-          {/* /.card */}
+          
         </div>
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(ManageSubject);

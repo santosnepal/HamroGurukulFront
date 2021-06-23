@@ -1,55 +1,30 @@
-<div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Staff Feedback
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
-  <section className="content">
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-12">
-          {/* general form elements */}
-          <div className="card card-primary">
-            <div className="card-header">
-              <h3 className="card-title">Staff Feedback</h3>
-            </div>
-            {/* /.card-header */}
-            {/* form start */}
-            <div className="table">
-              {'{'}% for feedback in feedbacks %{'}'}
-              {'{'}% endfor %{'}'}
-              <table className="table">
-                <tbody><tr>
-                    <th>ID</th>
-                    <th>Staff ID</th>
-                    <th>Staff Name</th>
-                    <th>Message</th>
-                    <th>Sended On</th>
-                    <th>Reply</th>
-                  </tr><tr>
-                    <td>{'{'}{'{'} feedback.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} feedback.staff_id.admin.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} feedback.staff_id.admin.first_name {'}'}{'}'} {'{'}{'{'} feedback.staff_id.admin.last_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} feedback.feedback {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} feedback.created_at {'}'}{'}'}</td>
-                    <td>
-                      {'{'}% if feedback.feedback_reply == "" %{'}'}
-                      <button className="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal">Reply</button>
-                      {'{'}% else %{'}'}
-                      {'{'}{'{'} feedback.feedback_reply {'}'}{'}'}
-                      {'{'}% endif %{'}'}
-                    </td>
-                  </tr></tbody></table>
-            </div>
-          </div>
-          {/* /.card */}
-        </div>
-      </div>
-    </div>
-  </section>
-  {/* Modal */}
-  <div className="modal fade" id="reply_modal" role="dialog">
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const StaffFeedBackAdmin = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  let showModel=false;
+  const Model=()=>{
+    return(
+      <div>
+        <div className="modal fade" id="reply_modal" role="dialog">
     <div className="modal-dialog">
       {/* Modal content*/}
       <div className="modal-content">
@@ -69,8 +44,74 @@
       </div>
     </div>
   </div>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-  {'{'}% block custom_js %{'}'}
-  {'{'}% endblock custom_js %{'}'}
+      </div>
+    );
+  }
+  
+return(
+<div>
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
+  <section className="content">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-12">
+          {/* general form elements */}
+          <div className="card card-primary">
+            <div className="card-header">
+              <h3 className="card-title">Staff Feedback</h3>
+            </div>
+            {/* /.card-header */}
+            {/* form start */}
+            <div className="table">
+              
+              <table className="table">
+                <tbody><tr>
+                    <th>ID</th>
+                    <th>Staff ID</th>
+                    <th>Staff Name</th>
+                    <th>Message</th>
+                    <th>Sended On</th>
+                    <th>Reply</th>
+                  </tr><tr>
+                    <td> id </td>
+                    <td> id </td>
+                    <td> first_name   last_name </td>
+                    <td> feedback </td>
+                    <td> created_at </td>
+                    <td>
+                     
+                      <button className="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" onClick={showModel=true}>Reply</button>
+                      
+                      
+                    </td>
+                  </tr></tbody></table>
+            </div>
+          </div>
+          {/* /.card */}
+        </div>
+      </div>
+    </div>
+  </section>
+   {/* Modal */}
+   {showModel?<Model/>:` `}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(StaffFeedBackAdmin);

@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const AdminViewAttendance = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  View Attendance
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -20,17 +45,17 @@
               <div className="form-group">
                 <label>Subject </label>
                 <select className="form-control" name="subject" id="subject">
-                  {'{'}% for subject in subjects %{'}'}
-                  <option value="{{ subject.id }}">{'{'}{'{'} subject.subject_name {'}'}{'}'}</option>
-                  {'{'}% endfor %{'}'}
+                  
+                  <option value="#"> subject_name</option>
+                  
                 </select>
               </div>
               <div className="form-group">
                 <label>Session Year </label>
                 <select className="form-control" name="session_year_id" id="session_year_id">
-                  {'{'}% for session_year in session_year_id %{'}'}
-                  <option value="{{ session_year.id }}">{'{'}{'{'} session_year.session_start_year {'}'}{'}'} TO {'{'}{'{'} session_year.session_end_year {'}'}{'}'}</option>
-                  {'{'}% endfor %{'}'}
+                 
+                  <option value="#"> session_start_year TO  session_end_year</option>
+                  
                 </select>
               </div>
               <div className="form-group">
@@ -58,8 +83,18 @@
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-  {'{'}% block custom_js %{'}'}
-  {'{'}% endblock custom_js %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(AdminViewAttendance);

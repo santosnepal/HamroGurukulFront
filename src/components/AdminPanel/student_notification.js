@@ -1,59 +1,29 @@
-<div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Manage Student
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
-  <section className="content">
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Students</h3>
-              <div className="card-tools">
-                <div className="input-group input-group-sm" style={{width: 150}}>
-                  <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
-                  <div className="input-group-append">
-                    <button type="submit" className="btn btn-default"><i className="fas fa-search" /></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* /.card-header */}
-            <div className="card-body table-responsive p-0">
-              {'{'}% for student in students %{'}'}
-              {'{'}% endfor %{'}'}
-              <table className="table table-hover text-nowrap">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>User Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody><tr>
-                    <td>{'{'}{'{'} student.admin.id {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.first_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.last_name {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.username {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.admin.email {'}'}{'}'}</td>
-                    <td>{'{'}{'{'} student.address {'}'}{'}'}</td>
-                    <td><a href="#" className="btn btn-success show_notification" data-toggle="modal" data-target="#myModal">Send Notification</a></td>
-                  </tr></tbody>
-              </table>
-            </div>
-            {/* /.card-body */}
-          </div>
-          {/* /.card */}
-        </div>
-      </div>
-    </div>
-  </section>
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const SendStudentNotificationAdmin = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  const Modal =()=>{
+    return(
+      <div>
+         {/* /.content */}
   <div className="modal fade" id="myModal" role="dialog">
     <div className="modal-dialog">
       {/* Modal content*/}
@@ -77,8 +47,81 @@
       </div>
     </div>
   </div>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-  {'{'}% block custom_js %{'}'}
-  {'{'}% endblock custom_js %{'}'}
+      </div>
+    );
+  }
+  let showModel=false;
+return(
+<div>
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
+  <section className="content">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header">
+              <h3 className="card-title">Students</h3>
+              <div className="card-tools">
+                <div className="input-group input-group-sm" style={{width: 150}}>
+                  <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                  <div className="input-group-append">
+                    <button type="submit" className="btn btn-default"><i className="fas fa-search" /></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* /.card-header */}
+            <div className="card-body table-responsive p-0">
+              
+              <table className="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody><tr>
+                    <td>id</td>
+                    <td>first_name</td>
+                    <td>last_name</td>
+                    <td>username</td>
+                    <td>email</td>
+                    <td>address</td>
+                    <td><button to="#" className="btn btn-success show_notification" data-toggle="modal" data-target="#myModal" onClick={showModel=true}>Send Notification</button></td>
+                  </tr></tbody>
+              </table>
+            </div>
+            {/* /.card-body */}
+          </div>
+          {/* /.card */}
+        </div>
+      </div>
+    </div>
+  </section>
+  {showModel?<Modal/>:``}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(SendStudentNotificationAdmin);

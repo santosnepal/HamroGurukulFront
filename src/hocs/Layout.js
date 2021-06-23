@@ -2,9 +2,6 @@ import React,{useEffect} from 'react';
 import { connect } from 'react-redux';
 import {checkAuthenticated,load_user} from '../actions/auth';
 import NavBar from '../components/NavBar';
-import AdminPanel from '../components/AdminPanel/Adminpanel';
-import StudentHome from '../components/StudentPanel/student_home_template';
-import StudentBase from '../components/StudentPanel/base_template'
 import { Link, Redirect } from 'react-router-dom';
 const Layout=({ checkAuthenticated, load_user,who, children })=>{
     useEffect(()=>{
@@ -15,10 +12,11 @@ const Layout=({ checkAuthenticated, load_user,who, children })=>{
     },[]);
     if(who==="1"){
         return(
-            <div>
-                <NavBar/>
-                <AdminPanel/>
-            </div>
+            // <div>
+            //     <NavBar/>
+            //     <AdminPanel/>
+            // </div>
+            <Redirect to="/adminhome"/>
         );
     }
     if(who==="2"){

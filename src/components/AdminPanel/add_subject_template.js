@@ -1,10 +1,35 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+
+
+const AddSubject = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Add Subject
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  
+  <AdminBase/>
+  
+ 
+  </div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -16,8 +41,8 @@
             </div>
             {/* /.card-header */}
             {/* form start */}
-            <form role="form" action="/add_subject_save" method="post">
-              {'{'}% csrf_token %{'}'}
+            <form >
+              
               <div className="card-body">
                 <div className="form-group">
                   <label>Subject Name </label>
@@ -26,43 +51,50 @@
                 <div className="form-group">
                   <label>Course </label>
                   <select className="form-control" name="course">
-                    {'{'}% for course in courses %{'}'}
-                    <option value="{{ course.id }}">{'{'}{'{'} course.course_name {'}'}{'}'}</option>
-                    {'{'}% endfor %{'}'}
+                   
+                    <option value="#"> course_name </option>
+                   
                   </select>
                 </div>
                 <div className="form-group">
                   <label>Staff</label>
                   <select className="form-control" name="staff">
-                    {'{'}% for staff in staffs %{'}'}
-                    <option value="{{ staff.id }}">{'{'}{'{'} staff.first_name {'}'}{'}'} {'{'}{'{'} staff.last_name {'}'}{'}'}</option>
-                    {'{'}% endfor %{'}'}
+                    
+                    <option value="#"> first_name   last_name </option>
+                   
                   </select>
                 </div>
                 <div className="form-group">
-                  {'{'}% if messages %{'}'}
-                  {'{'}% for message in messages %{'}'}
-                  {'{'}% if message.tags == 'error' %{'}'}
-                  <div className="alert alert-danger" style={{marginTop: 10}}>{'{'}{'{'} message {'}'}{'}'}</div>
-                  {'{'}% endif %{'}'}
-                  {'{'}% if message.tags == 'success' %{'}'}
-                  <div className="alert alert-success" style={{marginTop: 10}}>{'{'}{'{'} message {'}'}{'}'}</div>
-                  {'{'}% endif %{'}'}
-                  {'{'}% endfor %{'}'}
-                  {'{'}% endif %{'}'}
+                  
+                  <div className="alert alert-danger" style={{marginTop: 10}}> message </div>
+                 
+                  <div className="alert alert-success" style={{marginTop: 10}}> message </div>
+                  
                 </div>
               </div>
-              {/* /.card-body */}
+              
               <div className="card-footer">
                 <button type="submit" className="btn btn-primary btn-block">Add Subject</button>
               </div>
             </form>
           </div>
-          {/* /.card */}
+         
         </div>
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+// return(
+//   <div>
+//     Hello guys
+//   </div>
+// )
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(AddSubject);

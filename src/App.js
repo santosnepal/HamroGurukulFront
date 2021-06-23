@@ -1,3 +1,4 @@
+//#region 
 import './App.css';
 import Home from './containers/Home';
 import Login from'./containers/Login';
@@ -27,7 +28,24 @@ import StudentFeedback from './components/StudentPanel/student_feedback';
 import StudentResult from './components/StudentPanel/student_result';
 import StudentAttendancePost from './components/StudentPanel/student_view_attendance';
 import StudentNotification from './components/StudentPanel/all_notification';
-
+import AdminHome from './components/AdminPanel/home_content';
+import AddStaff from './components/AdminPanel/add_staff_template';
+import AddStudent from './components/AdminPanel/add_student_template';
+import ManageStaffs from './components/AdminPanel/manage_staff_template';
+import ManageStudent from './components/AdminPanel/manage_student_template';
+import AddCousrse from './components/AdminPanel/add_course_template';
+import ManageCourse from './components/AdminPanel/manage_course_template';
+import AddSubject from './components/AdminPanel/add_subject_template';
+import ManageSubject from './components/AdminPanel/manage_subject_template';
+import ManageSession from './components/AdminPanel/manage_session_template';
+import StudentFeedBackAdmin from './components/AdminPanel/student_feedback_template';
+import StaffFeedBackAdmin from './components/AdminPanel/staff_feedback_template';
+import StaffLeaveAdmin from './components/AdminPanel/staff_leave_view';
+import StudentLeaveAdmin from './components/AdminPanel/student_leave_view';
+import AdminViewAttendance from './components/AdminPanel/admin_view_attendance';
+import SendStaffNotificationAdmin from './components/AdminPanel/staff_notification';
+import SendStudentNotificationAdmin from './components/AdminPanel/student_notification';
+//#endregion
 const App =()=>(
   <Provider store={store}>
     <Router>
@@ -61,8 +79,25 @@ const App =()=>(
       <Route exact path='/studentviewresult' component={StudentResult}/>
       <Route exact path='/studentviewattendancedata' component={StudentAttendancePost}/>
       <Route exact path='/studentviewnotification' component={StudentNotification}/> 
-
-
+      </Switch>
+      <Switch>
+        <Route exact path='/adminhome' component={AdminHome}/>
+        <Route exact path='/addstaff' component={AddStaff}/>
+        <Route exact path='/addstudent' component={AddStudent}/>
+        <Route exact path='/managestaff' component={ManageStaffs}/>
+        <Route exact path='/managestudent' component={ManageStudent}/>
+        <Route exact path='/addcourse' component={AddCousrse}/>
+        <Route exact path='/managecourse' component={ManageCourse}/>
+        <Route exact path='/addsubject' component={AddSubject}/>
+        <Route exact path='/managesubject' component={ManageSubject}/>
+        <Route exact path='/managesession' component={ManageSession}/>
+        <Route exact path='/studentfeedbackadmin' component={StudentFeedBackAdmin}/>
+        <Route exact path='/stafffeedbackadmin' component={StaffFeedBackAdmin}/>
+        <Route exact path='/staffleaveadmin' component={StaffLeaveAdmin}/>
+        <Route exact path='/studentleaveadmin' component={StudentLeaveAdmin}/>
+        <Route exact path='/adminviewhajir' component={AdminViewAttendance}/>
+        <Route exact path='/ssna' component={SendStaffNotificationAdmin}/>
+        <Route exact path='/sstna' component={SendStudentNotificationAdmin}/>
       </Switch>
     </Router>
   </Provider>

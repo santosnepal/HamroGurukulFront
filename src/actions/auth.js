@@ -123,7 +123,7 @@ export const signup = (first_name, last_name, email, password, re_password,user_
             'content-type':'application/json'
         }
     };
-    const body=JSON.stringify({first_name,last_name,email,user_types,password,re_password});
+    const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password});
     try{
         
         const res = await axios.post(`http://localhost:8000/auth/users/`,body,config);

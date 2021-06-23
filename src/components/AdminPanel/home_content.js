@@ -1,10 +1,37 @@
+import React, { useState } from 'react';
+import {Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import AdminBase from './base_template';
+import Footer from './footer';
+import {Pie} from 'react-chartjs-2';
+
+const AdminHome = ({logout,isAuthenticated  })=>{
+  const [redirect, setRedirect] = useState(false);
+  const logout_user = () => {
+      logout();
+      setRedirect(true);
+      
+  };
+  if(isAuthenticated ){
+    console.log("chor haina ma ");
+  } 
+  else{
+    
+    return <Redirect to="/"/>
+  }
+  
+  const labels=['Staff','Students'];
+  const datasets=[{
+    data:[30,150],
+    backgroundColor:['red','blue']
+  }]
+return(
 <div>
-  {'{'}% extends 'hod_template/base_template.html' %{'}'}
-  {'{'}% block page_title %{'}'}
-  Home
-  {'{'}% endblock page_title %{'}'}
-  {'{'}% block main_content %{'}'}
-  {/* Main content */}
+<div className="hold-transition sidebar-mini  layout-fixed">
+  <AdminBase/>
+</div>
+  <div className="content-wrapper">
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -12,58 +39,58 @@
           {/* small box */}
           <div className="small-box bg-info">
             <div className="inner">
-              <h3>{'{'}{'{'} student_count {'}'}{'}'}</h3>
+              <h3> student_count </h3>
               <p>Total Students</p>
             </div>
             <div className="icon">
               <i className="ion ion-pie-graph" />
             </div>
-            <a href="{% url 'manage_student' %}" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a>
+            <Link to="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></Link>
           </div>
         </div>
-        {/* ./col */}
+        
         <div className="col-lg-3 col-6">
-          {/* small box */}
+         
           <div className="small-box bg-success">
             <div className="inner">
-              <h3>{'{'}{'{'} staff_count {'}'}{'}'}</h3>
+              <h3> staff_count</h3>
               <p>Total Staffs</p>
             </div>
             <div className="icon">
               <i className="ion ion-pie-graph" />
             </div>
-            <a href="{% url 'manage_staff' %}" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a>
+            <Link to="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></Link>
           </div>
         </div>
-        {/* ./col */}
+       
         <div className="col-lg-3 col-6">
-          {/* small box */}
+         
           <div className="small-box bg-warning">
             <div className="inner">
-              <h3>{'{'}{'{'} course_count {'}'}{'}'}</h3>
+              <h3>course_count</h3>
               <p>Total Course</p>
             </div>
             <div className="icon">
               <i className="ion ion-pie-graph" />
             </div>
-            <a href="{% url 'manage_course' %}" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a>
+            <Link to="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></Link>
           </div>
         </div>
-        {/* ./col */}
+        
         <div className="col-lg-3 col-6">
-          {/* small box */}
+         
           <div className="small-box bg-danger">
             <div className="inner">
-              <h3>{'{'}{'{'} subject_count {'}'}{'}'}</h3>
+              <h3> subject_count</h3>
               <p>Total Subject</p>
             </div>
             <div className="icon">
               <i className="ion ion-pie-graph" />
             </div>
-            <a href="{% url 'manage_subject' %}" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a>
+            <Link to="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></Link>
           </div>
         </div>
-        {/* ./col */}
+        
       </div>
       <div className="row">
         <div className="col-lg-6">
@@ -77,9 +104,19 @@
               </div>
             </div>
             <div className="card-body">
-              <canvas id="pieChart" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
+              {/* <canvas id="pieChart" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} /> */}
+              <Pie
+                data={{
+                  labels:labels,
+                  datasets:datasets
+                }}
+                minHeight = '250'
+                height = '250'
+                maxHeight = '250'
+                maxWidth = '100%'
+              />
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
         <div className="col-lg-6">
@@ -95,7 +132,7 @@
             <div className="card-body">
               <canvas id="donutChart" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
       </div>
@@ -113,7 +150,7 @@
             <div className="card-body">
               <canvas id="pieChart3" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
         <div className="col-lg-6">
@@ -129,7 +166,7 @@
             <div className="card-body">
               <canvas id="pieChart4" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
       </div>
@@ -149,7 +186,7 @@
                 <canvas id="barChart1" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
               </div>
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
       </div>
@@ -169,14 +206,19 @@
                 <canvas id="barChart2" style={{minHeight: 250, height: 250, maxHeight: 250, maxWidth: '100%'}} />
               </div>
             </div>
-            {/* /.card-body */}
+            
           </div>
         </div>
       </div>
     </div>
   </section>
-  {/* /.content */}
-  {'{'}% endblock main_content %{'}'}
-  {'{'}% block custom_js %{'}'}
-  {'{'}% endblock custom_js %{'}'}
+  </div>
+  <Footer/>
 </div>
+);
+}
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect( mapStateToProps, { logout })(AdminHome);
