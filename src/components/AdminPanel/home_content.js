@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
 import {Pie} from 'react-chartjs-2';
-
+import axios from 'axios';
 const AdminHome = ({logout,isAuthenticated  })=>{
+
+ let stack=[5,5];
+ const [tcount, setValue] = useState(0);
+ const [scount,setsValue] = useState(0);
+ const [ccount,setcValue] = useState(0);
+ const [sucount,setsuValue] = useState(0);
+ const LoadData= async ()=>{
+ const dataS= await axios.get("http://127.0.0.1:8000/api/suser/3");
+ const datat = await axios.get("http://127.0.0.1:8000/api/suser/2");
+ const datac = await axios.get("http://127.0.0.1:8000/api/viewcourses");
+ const datas = await axios.get("http://127.0.0.1:8000/api/viewsubject");
+  setValue(datat.data.length);
+  setsValue(dataS.data.length);
+  setcValue(datac.data.length);
+  setsuValue(datas.data.length);
+  };
+ useEffect(() => {
+    LoadData();
+  }, []);
+
+ 
+  
   const [redirect, setRedirect] = useState(false);
   const logout_user = () => {
       logout();
@@ -20,12 +42,17 @@ const AdminHome = ({logout,isAuthenticated  })=>{
     
     return <Redirect to="/"/>
   }
-  
+   
+ // console.log(`${this.state.dataSS} ${this.state.datatt}`);
   const labels=['Staff','Students'];
   const datasets=[{
-    data:[30,150],
+    data:[tcount,scount],
     backgroundColor:['red','blue']
   }]
+
+ 
+
+
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -39,7 +66,7 @@ return(
           {/* small box */}
           <div className="small-box bg-info">
             <div className="inner">
-              <h3> student_count </h3>
+              <h3> {scount} </h3>
               <p>Total Students</p>
             </div>
             <div className="icon">
@@ -53,7 +80,7 @@ return(
          
           <div className="small-box bg-success">
             <div className="inner">
-              <h3> staff_count</h3>
+              <h3> {tcount}</h3>
               <p>Total Staffs</p>
             </div>
             <div className="icon">
@@ -67,7 +94,7 @@ return(
          
           <div className="small-box bg-warning">
             <div className="inner">
-              <h3>course_count</h3>
+              <h3>{ccount}</h3>
               <p>Total Course</p>
             </div>
             <div className="icon">
@@ -81,7 +108,7 @@ return(
          
           <div className="small-box bg-danger">
             <div className="inner">
-              <h3> subject_count</h3>
+              <h3> {sucount} </h3>
               <p>Total Subject</p>
             </div>
             <div className="icon">

@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
 
 
 const ManageStaffs = ({logout,isAuthenticated  })=>{
+  const [staffs,updateStaffs] = useState([]);
   const [redirect, setRedirect] = useState(false);
+  const LoadData= async ()=>{
+        const dataS= await axios.get("http://127.0.0.1:8000/api/suser/2");
+	updateStaffs(dataS.data);
+
+  };
+   useEffect(() => {
+    LoadData();
+  }, []);
+  console.log(staffs);
   const logout_user = () => {
       logout();
       setRedirect(true);
@@ -55,7 +66,6 @@ return(
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>User Name</th>
                     <th>Email</th>
                     <th>Address</th>
                     <th>Last Login</th>
@@ -67,7 +77,6 @@ return(
                     <td> id </td>
                     <td> first_name </td>
                     <td> last_name </td>
-                    <td> username </td>
                     <td> email </td>
                     <td> staff.address </td>
                     <td> last_login </td>
