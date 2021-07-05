@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import Cookies from 'js-cookie';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import CSRFToken from '../CSRFToken';
+import $ from 'jquery';
+
+
 
 
 const AddCousrse = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
+  const [formData, setFormData] = useState({
+    course_name: '',
+   });
+   const {course_name} = formData;
+   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+   const onSubmit = async  e => {
+    
+    e.preventDefault();
+
+  const config = {
+    headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+        
+    }
+};
+  const body=JSON.stringify({course_name});
+  const res = await axios.post(`http://localhost:8000/api/addcourses`,body,config);
+  
+  // console.log(res);
+  if(res.status===200){
+
+    toast.success(`New Course ${course_name} added sucessfully`);
+  }
+  else{
+
+    toast.error(`Couldn't add ${course_name} please try again later`);
+  }
+
+};
   if(isAuthenticated ){
     console.log("chor haina ma ");
   } 
@@ -40,28 +73,29 @@ return(
               <h3 className="card-title">Add Course</h3>
             </div>
             
-            <form role="form" action="/add_course_save" method="post">
-             
+            <form  onSubmit={e => onSubmit(e)}>
+            {/* <input type="hidden" name="_csrf" value={Cookie.load('XSRF-TOKEN')}/> */}
+            {/* <CSRFToken /> */}
               <div className="card-body">
                 <div className="form-group">
                   <label>Course Name </label>
-                  <input type="text" className="form-control" name="course" placeholder="Enter Course" />
-                </div>
-                <div className="form-group">
-                  
-                  <div className="alert alert-danger" style={{marginTop: 10}}> message </div>
-                  
-                  <div className="alert alert-success" style={{marginTop: 10}}> message </div>
-                  
-                </div>
+                  <input 
+                   type="text" 
+                   className="form-control" 
+                   name="course_name" 
+                   placeholder="Enter Course" 
+                   value={course_name}
+                   onChange={e => onChange(e)}
+                   required
+                    />
+                </div>               
               </div>
-              {/* /.card-body */}
               <div className="card-footer">
-                <button type="submit" className="btn btn-primary btn-block">Add Course</button>
+                <button type="submit" className="btn btn-primary btn-block" >Add Course</button>
               </div>
             </form>
           </div>
-          {/* /.card */}
+          
         </div>
       </div>
     </div>

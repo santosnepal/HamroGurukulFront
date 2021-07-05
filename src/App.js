@@ -1,4 +1,6 @@
 //#region 
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import Home from './containers/Home';
 import Login from'./containers/Login';
@@ -100,7 +102,9 @@ const App =()=>(
         <Route exact path='/sstna' component={SendStudentNotificationAdmin}/>
       </Switch>
     </Router>
+    <ToastContainer closeButton={false} position="bottom-right" />
   </Provider>
+  
 )
 
 export default App;

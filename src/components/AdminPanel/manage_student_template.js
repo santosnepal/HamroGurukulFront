@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
+import axios from 'axios';
 import Footer from './footer';
 
 
 const ManageStudent = ({logout,isAuthenticated  })=>{
+  const [students,updateStudents] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const logout_user = () => {
       logout();
       setRedirect(true);
       
   };
+  const LoadData= async ()=>{
+    const dataS= await axios.get("http://127.0.0.1:8000/api/suser/3");
+    console.log("Hey ia m called");
+updateStudents(dataS);
+};
+useEffect(() => {
+ console.log("Hey i am calling");
+LoadData();
+}, []);
   if(isAuthenticated ){
     console.log("chor haina ma ");
   } 
@@ -55,7 +66,6 @@ return(
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>User Name</th>
                     <th>Email</th>
                     <th>Address</th>
                     <th>Gender</th>
@@ -67,21 +77,37 @@ return(
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody><tr>
-                    <td>id </td>
-                    <td>first_name </td>
-                    <td>last_name </td>
-                    <td>username </td>
-                    <td>email </td>
-                    <td> address </td>
-                    <td> gender </td>
-                    <td><img src="{{ profile_pic }}" style={{width: 100}} /></td>
-                    <td> Session start to end </td>
-                    <td> course_name </td>
-                    <td>last_login </td>
-                    <td>date_joined </td>
+                <tbody>
+                    {students.data?students.data.map(student =>(
+                      <tr>
+                      <td>{student.id?student.id:`N/A`} </td>
+                      <td>{student.first_name?student.first_name:`N/A`} </td>
+                      <td>{student.last_name?student.last_name:`N/A`} </td>
+                      <td>{student.email?student.email:`N/A`} </td>
+                      <td>{student.address?student.address:`N/A`} </td>
+                      <td>{student.gender?student.gender:`N/A`} </td>
+                      <td>N/A</td>
+                      <td>{student.Session_start_to_end?student.Session_start_to_end:`N/A`} </td>
+                      <td>{student.course_name?student.course_name:`N/A`} </td>
+                      <td>{student.last_login?student.last_login:`N/A`} </td>
+                      <td>{student.date_joined?student.date_joined:`N/A`} </td>
+                      <td><Link to="#" className="btn btn-success">Edit</Link></td>
+                      </tr>
+                    )):<tr>
+                      <td>id </td>
+                    <td>N/A</td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
+                    <td> N/A </td>
                     <td><Link to="#" className="btn btn-success">Edit</Link></td>
-                  </tr></tbody>
+                      </tr>}
+                  </tbody>
               </table>
             </div>
             {/* /.card-body */}

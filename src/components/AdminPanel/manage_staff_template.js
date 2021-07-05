@@ -11,19 +11,23 @@ const ManageStaffs = ({logout,isAuthenticated  })=>{
   const [staffs,updateStaffs] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const LoadData= async ()=>{
-        const dataS= await axios.get("http://127.0.0.1:8000/api/suser/2");
-	updateStaffs(dataS.data);
-
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+        const dataS= await axios.get("http://127.0.0.1:8000/api/suser/2",config);
+        console.log("Hey ia m called");
+	updateStaffs(dataS);
   };
    useEffect(() => {
+     console.log("Hey i am calling");
     LoadData();
   }, []);
   console.log(staffs);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
+ 
   if(isAuthenticated ){
     console.log("chor haina ma ");
   } 
@@ -73,16 +77,31 @@ return(
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody><tr>
-                    <td> id </td>
-                    <td> first_name </td>
-                    <td> last_name </td>
-                    <td> email </td>
-                    <td> staff.address </td>
-                    <td> last_login </td>
-                    <td> date_joined </td>
-                    <td><Link to="#" className="btn btn-success">Edit</Link></td>
-                  </tr></tbody>
+                <tbody>
+                    {staffs.data?staffs.data.map(staff =>(
+                      <tr>
+                      <td> {staff.id} </td>
+                      <td> {staff.first_name} </td>
+                      <td> {staff.last_name} </td>
+                      <td> {staff.email} </td>
+                      <td> {staff.address?staff.address:`N/A`} </td>
+                      <td> {staff.last_login?staff.last_login:`N/A`} </td>
+                      <td> {staff.date_joined?staff.date_joined:`N/A`} </td>
+                      <td><Link to="#" className="btn btn-success">Edit</Link></td>
+                      </tr>
+                    )):<tr>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td><Link to="#" className="btn btn-success">Edit</Link></td>
+                      </tr>}
+                    
+                  </tbody>
               </table>
             </div>
             

@@ -4,22 +4,26 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 
 const ManageCourse = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
-  }
+const [courses,setCourses] = useState([]);
+const loadData=async ()=>{
+  const config ={
+    headers:{
+        'content-type':'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Accept':'application/json'
+    }
+};
+const loadedData = await axios.get("http://127.0.0.1:8000/api/viewcourses",config);
+setCourses(loadedData);  
+}
+useEffect(()=>{
+  loadData();
+},[])
   
 return(
 <div>
@@ -57,11 +61,21 @@ return(
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody><tr>
-                    <td> id </td>
-                    <td> course_name </td>
+                <tbody>
+                  {courses.data?courses.data.map(course=>(
+                  <tr>
+                    <td> {course.id} </td>
+                    <td> {course.course_name} </td>
                     <td><Link to="#" className="btn btn-success">Edit</Link></td>
-                  </tr></tbody>
+                  </tr>
+                  )):
+                  <tr>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td><Link to="#" className="btn btn-success">Edit</Link></td>
+                  </tr>
+                  }
+                  </tbody>
               </table>
             </div>
             

@@ -13,11 +13,19 @@ const AdminHome = ({logout,isAuthenticated  })=>{
  const [scount,setsValue] = useState(0);
  const [ccount,setcValue] = useState(0);
  const [sucount,setsuValue] = useState(0);
+ const config = {
+  headers: {
+      'Accept': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem("access")}`,
+      'Content-Type': 'application/json',
+      
+  }
+};
  const LoadData= async ()=>{
- const dataS= await axios.get("http://127.0.0.1:8000/api/suser/3");
- const datat = await axios.get("http://127.0.0.1:8000/api/suser/2");
- const datac = await axios.get("http://127.0.0.1:8000/api/viewcourses");
- const datas = await axios.get("http://127.0.0.1:8000/api/viewsubject");
+ const dataS= await axios.get("http://127.0.0.1:8000/api/suser/3",config);
+ const datat = await axios.get("http://127.0.0.1:8000/api/suser/2",config);
+ const datac = await axios.get("http://127.0.0.1:8000/api/viewcourses",config);
+ const datas = await axios.get("http://127.0.0.1:8000/api/viewsubject",config);
   setValue(datat.data.length);
   setsValue(dataS.data.length);
   setcValue(datac.data.length);
