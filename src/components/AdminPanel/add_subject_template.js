@@ -4,23 +4,71 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 
 const AddSubject = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
+  const [course,setCourse] = useState([]);
+  const [staff,setStaff] = useState([]);
+  const [formData,setFormData] = useState({
+    course_id:'',
+    staff_id:'',
+    subject_name:''
+  })
+  const {course_id,staff_id,subject_name} = formData;
+  const onChange = e => setFormData({...formData, [e.target.name]: e.target.value });
+  const loadData=async ()=>{
+    const config = {
+      headers: {
+          //'X-CSRFToken': Cookies.get('csrftoken'),
+          'Accept': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Content-Type': 'application/json',
+          
+      }
   };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
+  const courses = await axios.get("http://127.0.0.1:8000/api/viewcourses",config);
+  const staffs = await axios.get("http://127.0.0.1:8000/api/suser/2",config);
+  setCourse(courses);
+  setStaff(staffs);
   }
+  useEffect(()=>{
+    loadData();
+  },[])
+
+  const onSubmit = async  e => {
+    
+    e.preventDefault();
+
+  const config = {
+    headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+        
+    }
+};
+
+  const body=JSON.stringify({...formData});
+  toast.success(`${body}`);
+  console.log(body);
+  const res = await axios.post(`http://localhost:8000/api/addsubject`,body,config);
   
+  // console.log(res);
+  if(res.status===200){
+    
+    //toast.success(`New Subject ${subject_name} added sucessfully`);
+    toast.success(`${res.data}`);
+  }
+  else{
+
+    toast.error(`Couldn't add ${subject_name} please try again later`);
+  }
+
+};
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -41,36 +89,81 @@ return(
             </div>
             {/* /.card-header */}
             {/* form start */}
-            <form >
+            <form  onSubmit={e => onSubmit(e)} >
               
               <div className="card-body">
                 <div className="form-group">
                   <label>Subject Name </label>
-                  <input type="text" className="form-control" name="subject_name" placeholder="Enter Subject" />
+                  <input
+                    type="text" 
+                    className="form-control"
+                    name="subject_name" 
+                    placeholder="Enter Subject"
+                    value={subject_name}
+                    onChange={e => onChange(e)} 
+                    required/>
                 </div>
                 <div className="form-group">
                   <label>Course </label>
-                  <select className="form-control" name="course">
-                   
-                    <option value="#"> course_name </option>
-                   
+                  <select 
+                  className="form-control" 
+                  name="course_id"
+                  onChange={(e)=>{
+                    console.log(e.target.value ,e.target.name);
+                    setFormData({...formData, [e.target.name]: e.target.value });
+                    console.log(formData);
+                  }}
+                  //onChange={e => onChange(e)} 
+                  required
+                  >
+                    <option>
+                      Select Course name
+                    </option>
+                   { course.data?course.data.map(coursea =>(
+                     <option 
+                     
+                     value={coursea.id}
+                     > 
+                     {coursea.course_name} 
+                     
+                     </option>
+                   )):
+                    <option>
+                      N/A
+                    </option>
+                    }
                   </select>
                 </div>
                 <div className="form-group">
                   <label>Staff</label>
-                  <select className="form-control" name="staff">
-                    
-                    <option value="#"> first_name   last_name </option>
-                   
+                  <select className="form-control"
+                   name="staff_id"
+                   onChange={(e)=>{
+                    console.log(e.target.value ,e.target.name);
+                    setFormData({...formData, [e.target.name]: e.target.value });
+                    console.log(formData);
+                  }}
+                 // onChange={e => onChange(e)}
+                   required
+                   >
+                     <option>
+                       Select Staff
+                     </option>
+                    {staff.data?staff.data.map(staffa=>(
+                    <option 
+                       name="staff_id"
+                       value={staffa.id}
+                      >
+                       {`${staffa.first_name} ${staffa.last_name}`} 
+                       </option>
+                    )):
+                    <option>
+                      N/A
+                    </option>   
+                  }                
                   </select>
                 </div>
-                <div className="form-group">
-                  
-                  <div className="alert alert-danger" style={{marginTop: 10}}> message </div>
-                 
-                  <div className="alert alert-success" style={{marginTop: 10}}> message </div>
-                  
-                </div>
+                
               </div>
               
               <div className="card-footer">

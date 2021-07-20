@@ -4,22 +4,44 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const ManageSession = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
+  const [formData,setFormData] = useState({
+    session_start_year:'',
+    session_end_year:''
+  });
+  const {session_start_year,session_end_year} = formData;
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onSubmit = async  e => {
     
-    return <Redirect to="/"/>
+    e.preventDefault();
+
+  const config = {
+    headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+        
+    }
+};
+  const body=JSON.stringify({...formData});
+  const res = await axios.post(`http://localhost:8000/api/addsessionyear`,body,config);
+  
+  // console.log(res);
+  if(res.status===200){
+
+    toast.success(`${session_start_year} to ${session_end_year} has been added successfully`);
   }
+  else{
+
+    toast.error(`Couldn't add ${session_start_year} to ${session_end_year}  please try again later`);
+  }
+
+};
   
 return(
 <div>
@@ -40,24 +62,30 @@ return(
               <h3 className="card-title">Add Session Year</h3>
             </div>
            
-            <form role="form" action="#" method="post">
+            <form  onSubmit={e => onSubmit(e)}>
               
               <div className="card-body">
                 <div className="form-group">
                   <label>Session Start Year </label>
-                  <input type="date" className="form-control" name="session_start" placeholder="Enter Session Start Year" />
+                  <input 
+                  type="date" 
+                  className="form-control" 
+                  name="session_start_year"
+                  placeholder="Enter Session Start Year" 
+                  onChange={e => onChange(e)}
+                  required/>
                 </div>
                 <div className="form-group">
                   <label>Session End Year </label>
-                  <input type="date" className="form-control" name="session_end" placeholder="Enter Session End Year" />
+                  <input 
+                  type="date" 
+                  className="form-control"
+                  name="session_end_year"
+                  placeholder="Enter Session End Year"
+                  onChange={e => onChange(e)}
+                  required />
                 </div>
-                <div className="form-group">
-                  
-                  <div className="alert alert-danger" style={{marginTop: 10}}> message</div>
-                  
-                  <div className="alert alert-success" style={{marginTop: 10}}> message</div>
-                  
-                </div>
+                
               </div>
               
               <div className="card-footer">

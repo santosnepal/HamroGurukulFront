@@ -1,25 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
 
 
 const StaffLeaveAdmin = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
-  }
+  const [leaves,updateLeaves] = useState([]);
+  const [staffs,updateStaffs] = useState([]);
   
 return(
 <div>

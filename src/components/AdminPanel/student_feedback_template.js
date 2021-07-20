@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
 
 
 const StudentFeedBackAdmin = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
+  const [feedback,updateFeedback] = useState([]);
+  const [students,updateStudents] = useState([]);
+  const LoadData= async ()=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+        const dataS= await axios.get("http://127.0.0.1:8000/api/getstudentfeedback",config);
+        const data= await axios.get("http://127.0.0.1:8000/api/suser/3",config);
+        updateFeedback(dataS);
+        updateStudents(data);
       
   };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
-  }
   let showModel=false;
   const Model=()=>{
     return(
@@ -47,7 +51,9 @@ const StudentFeedBackAdmin = ({logout,isAuthenticated  })=>{
       </div>
     );
   }
-  
+  useEffect(async ()=>{
+    LoadData();
+  },[])
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -75,23 +81,42 @@ return(
                     <th>ID</th>
                     <th>Student ID</th>
                     <th>Student Name</th>
-                    <th>Student Session</th>
                     <th>Message</th>
                     <th>Sended On</th>
                     <th>Reply</th>
-                  </tr><tr>
-                    <td>id </td>
-                    <td>id </td>
-                    <td>first_name  last_name </td>
-                    <td>session_start_year  - session_end_year </td>
-                    <td>feedback </td>
-                    <td>created_at </td>
+                  </tr>
+                  {feedback.data?feedback.data.map(fee=>(
+                    <tr>
+                    <td>{fee.id} </td>
+                    <td>{fee.student_id} </td>
+                    <td>{students.data.map(students=>(
+                      fee.student_id===students.id?`${students.first_name} ${students.last_name}`:``
+                    ))} </td>
+                    <td>{fee.feedback} </td>
+                    <td>{fee.created_at} </td>
                     <td>
                      
-                      <button className="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" onClick={showModel=true}>Reply</button>
+                      <button className="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" onClick={showModel=true} >Reply</button>
                      
                     </td>
-                  </tr></tbody></table>
+                  </tr>
+
+                  )):
+                  <tr>
+                  <td>N/A </td>
+                  <td>N/A </td>
+                  <td>N/A </td>
+                  <td>N/A </td>
+                  <td>N/A </td>
+                  <td>
+                   
+                    <button className="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal" >Reply</button>
+                   
+                  </td>
+                </tr>
+}
+                  
+                  </tbody></table>
             </div>
           </div>
           {/* /.card */}
