@@ -15,9 +15,11 @@ const AddStaff = ({signup,isAuthenticated  })=>{
       password: '',
       re_password: '',
       user_types:'',
+      gender :'',
+      
   });
 
-  const { first_name, last_name, email, password, re_password,user_types } = formData;
+  const { first_name, last_name, email, password, re_password,user_types,gender,course_id,session_year_id } = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -25,7 +27,7 @@ const AddStaff = ({signup,isAuthenticated  })=>{
       e.preventDefault();
 
       if (password === re_password) {
-          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2');
+          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2',gender,'0','0');
           setAccountCreated(true);
       }
   };
@@ -86,6 +88,18 @@ return(
                         onChange={e => onChange(e)}
                         required
                     />
+               </div>
+               <div className='form-group'>
+                 <select className='form-control' id = 'gender'
+                  onChange={(e)=>{
+                    console.log(e.target.value ,e.target.name);
+                    setFormData({...formData, [e.target.name]: e.target.value });
+                    console.log(formData);
+                  }}
+                 >
+                   <option value="0">M</option>
+                   <option value ="1">F</option>
+                 </select>
                </div>
                 <button className='btn btn-primary' type='submit'>Register</button>
             </form>

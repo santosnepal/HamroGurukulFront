@@ -88,9 +88,9 @@ return(
                     <tr>
                     <td>{fee.id} </td>
                     <td>{fee.staff_id} </td>
-                    <td>{staffs.data.map(staff=>(
+                    <td>{staffs.data?staffs.data.map(staff=>(
                       fee.staff_id===staff.id?`${staff.first_name} ${staff.last_name}`:``
-                    ))} </td>
+                    )):`N/A`} </td>
                     <td>{fee.feedback} </td>
                     <td>{fee.created_at} </td>
                     <td>

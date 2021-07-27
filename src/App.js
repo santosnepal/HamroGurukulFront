@@ -47,6 +47,7 @@ import StudentLeaveAdmin from './components/AdminPanel/student_leave_view';
 import AdminViewAttendance from './components/AdminPanel/admin_view_attendance';
 import SendStaffNotificationAdmin from './components/AdminPanel/staff_notification';
 import SendStudentNotificationAdmin from './components/AdminPanel/student_notification';
+import enrollstudent from "./components/AdminPanel/enrollstudent";
 //#endregion
 const App =()=>(
   <Provider store={store}>
@@ -100,6 +101,7 @@ const App =()=>(
         <Route exact path='/adminviewhajir' component={AdminViewAttendance}/>
         <Route exact path='/ssna' component={SendStaffNotificationAdmin}/>
         <Route exact path='/sstna' component={SendStudentNotificationAdmin}/>
+        <Route exact path='/enrollstudent' component={enrollstudent}/>
       </Switch>
     </Router>
     <ToastContainer closeButton={false} position="bottom-right" />

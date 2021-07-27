@@ -69,6 +69,16 @@ const AdminSideBar=()=>{
               </p>
             </Link>
           </li>
+
+          <li className="nav-item">
+            <Link to = "/enrollstudent" className="nav-link">
+              <i className="nav-icon fas fa-th"/>
+              <p>
+                Enroll Student
+              </p>
+            </Link>
+
+          </li>
           <li className="nav-item">
             
             <Link to="/managestudent" className="nav-link ">

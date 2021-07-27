@@ -10,8 +10,21 @@ const StudentLeaveAdmin = ({logout,isAuthenticated  })=>{
   const [leave,updateLeave] = useState([]);
   const [student,updateStudent] = useState([]);
   const LoadData=async ()=>{
-    
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const dataS= await axios.get("http://127.0.0.1:8000/api/getstudentleave",config);
+  const data= await axios.get("http://127.0.0.1:8000/api/suser/3",config);
+  updateLeave(dataS);
+  updateStudent(data);
   }
+  useEffect(async ()=>{
+    LoadData();
+  },[])
   
 return(
 <div>
@@ -44,22 +57,29 @@ return(
                     <th>Leave Message</th>
                     <th>Apply On</th>
                     <th>Action</th>
-                  </tr><tr>
+                  </tr>{leave.data?leave.data.map(leaves=>(
+                    <tr>
+                    <td> {leaves.id} </td>
+                    <td> {leaves.student_id} </td>
+                    <td> {student.data?student.data.map(student=>(
+                      leaves.student_id===student.id?`${student.first_name} ${student.last_name}`:``
+                    )):`N/A`} </td>
+                    <td> {leaves.leave_date} </td>
+                    <td> {leaves.leave_message} </td>
+                    <td> {leaves.created_at} </td>
+                    <td>{leaves.leave_status===0?
+                    <Link to="#" className="btn btn-success">Approve</Link>:
+                    <Link  className="btn btn-danger" to="#">Disapprove</Link>}
+                    </td>
+                  </tr>
+                  )):<tr>
                     <td> id </td>
                     <td> id </td>
                     <td> first_name   last_name </td>
                     <td> leave_date </td>
                     <td> leave_message </td>
                     <td> created_at </td>
-                    <td>
-                    <Link to="#" className="btn btn-success">Approve</Link>
-                      <Link  className="btn btn-danger" to="#">Disapprove</Link>
-                      
-                      <button className="btn btn-warning" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Approved</button>
-                      
-                      <button className="btn btn-danger" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Disapproved</button>
-                    </td>
-                  </tr></tbody></table>
+                    </tr>}</tbody></table>
             </div>
           </div>
           {/* /.card */}

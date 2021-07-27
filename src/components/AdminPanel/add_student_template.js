@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
 import { signup } from '../../actions/auth';
+import axios from 'axios';
 
 const AddStudent = ({signup,isAuthenticated  })=>{
   const [accountCreated, setAccountCreated] = useState(false);
+  const [courses,updateCourses] = useState([]);
+  const [sessionyear,updateSessionyear] = useState([]);
   const [formData, setFormData] = useState({
       first_name: '',
       last_name: '',
@@ -15,20 +18,40 @@ const AddStudent = ({signup,isAuthenticated  })=>{
       password: '',
       re_password: '',
       user_types:'',
+      gender :''
+     
   });
 
-  const { first_name, last_name, email, password, re_password,user_types } = formData;
+  const { first_name, last_name, email, password, re_password,user_types ,gender} = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = e => {
       e.preventDefault();
-
+      console.log(first_name, last_name, email, password, re_password,user_types ,gender)
       if (password === re_password) {
-          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2');
+          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','3',gender);
           setAccountCreated(true);
       }
   };
+const LoadData =async ()=>{
+  const config ={
+    headers:{
+        'content-type':'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Accept':'application/json'
+    }
+};
+const cours = await axios.get("http://127.0.0.1:8000/api/viewcourses",config);
+const syear = await axios.get("http://127.0.0.1:8000/api/viewsessionyear",config);
+updateCourses(cours);
+updateSessionyear(syear);
+}
+useEffect(() => {
+  console.log("Hey i am calling");
+ LoadData();
+}, []);
+
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -86,6 +109,21 @@ return(
                         onChange={e => onChange(e)}
                         required
                     />
+               </div>
+               
+               <div className='form-group'>
+                 <select className='form-control' id = 'gender'
+                 name="gender"
+                   onChange={(e)=>{
+                    console.log(e.target.value ,e.target.name);
+                    setFormData({...formData, [e.target.name]: e.target.value });
+                    console.log(formData);
+                  }}
+                 >
+                   <option>Select Gender</option>
+                   <option  value="0">M</option>
+                   <option  value ="1">F</option>
+                 </select>
                </div>
                 <button className='btn btn-primary' type='submit'>Register</button>
             </form>

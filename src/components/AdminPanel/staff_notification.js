@@ -1,26 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const SendStaffNotificationAdmin = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
+  const [staffs,updateStaffs] = useState([]);
+  const [receiver,updateReceiver] = useState([]);
+  
+  const LoadData= async ()=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
   };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
+        const dataS= await axios.get("http://127.0.0.1:8000/api/suser/2",config);
+        
+	updateStaffs(dataS);
+  };
+   useEffect(() => {
+     
+    LoadData();
+  }, []);
+  const Modal =({props})=>{
+    console.log(props);
+    const sendnotificaton = async () =>{
+      const config ={
+        headers:{
+            'content-type':'application/json',
+            'Authorization': `JWT ${localStorage.getItem("access")}`,
+            'Accept':'application/json'
+        }
+    };
+    const staff_id = props.iid;
+    const message = document.getElementById("message_not").value;
+    const body = JSON.stringify({message,staff_id});
+    console.log(body);
+    const res = await axios.post("http://127.0.0.1:8000/api/sendstaffnotification",body,config) ;
+    if(res.status===200){
+      showModel = false;
+      toast.success(`Notification Sent to ${props.nam} sucessfully`);
+    }
+    else{
+  
+      toast.error(` Couldn't send  Notification to  ${props.nam}  please try again later`);
+    }
+    }
     
-    return <Redirect to="/"/>
-  }
-  const Modal =()=>{
     return(
       <div>
          {/* /.content */}
@@ -29,16 +61,16 @@ const SendStaffNotificationAdmin = ({logout,isAuthenticated  })=>{
       {/* Modal content*/}
       <div className="modal-content">
         <div className="modal-header">
-          <h4 className="modal-title">Send Notification to <span id="name_span" /></h4>
+          <h4 className="modal-title">Send Notification to {props.nam} <span id="name_span" /></h4>
           <button type="button" className="close" data-dismiss="modal">×</button>
         </div>
         <div className="modal-body">
           <div className="form-group">
             <input type="text" name="message" className="form-control" id="message_not" />
-            <input type="hidden" name="student_id" className="form-control" id="student_id" />
+            
           </div>
           <div className="form-group">
-            <button className="btn btn-info btn-block send_notification_btn" type="button">Send Notification</button>
+            <button className="btn btn-info btn-block send_notification_btn"  onClick={sendnotificaton} type="button">Send Notification</button>
           </div>
         </div>
         <div className="modal-footer">
@@ -51,6 +83,11 @@ const SendStaffNotificationAdmin = ({logout,isAuthenticated  })=>{
     );
   }
   let showModel=false;
+ const trys = (hello) =>{
+    updateReceiver(hello);
+    // <Modal props={receiver} />
+    
+ }
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -85,19 +122,37 @@ return(
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>User Name</th>
                     <th>Email</th>
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody><tr>
+                <tbody>
+                {staffs.data?staffs.data.map(staff =>(
+
+                      <tr>
+                      <td> {staff.id} </td>
+                      <td> {staff.first_name} </td>
+                      <td> {staff.last_name} </td>
+                      <td> {staff.email} </td>
+                      <td><button to="#" className="btn btn-success show_notification" data-toggle="modal" data-target="#myModal"  onClick={ showModel=true ,()=>trys({nam:`${staff.first_name} ${staff.last_name}`,iid:staff.id })}  >Send Notification</button></td>
+                      </tr>
+                    )):<tr>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        
+                        <td><button to="#" className="btn btn-success show_notification" data-toggle="modal" data-target="#myModal" disabled={true} onClick={showModel=true}>Send Notification</button></td>
+                      </tr>}
+                  {/* <tr>
                     <td> id </td>
                     <td> first_name </td>
                     <td> last_name </td>
                     <td> username </td>
                     <td> email </td>
                     <td><button to="#" className="btn btn-success show_notification" data-toggle="modal" data-target="#myModal" onClick={showModel=true}>Send Notification</button></td>
-                  </tr></tbody>
+                  </tr> */}
+                  </tbody>
               </table>
             </div>
             {/* /.card-body */}
@@ -107,7 +162,7 @@ return(
       </div>
     </div>
   </section>
- {showModel?<Modal/>:``}
+ {showModel?<Modal props={receiver} />:``}
   </div>
   <Footer/>
 </div>

@@ -16,6 +16,7 @@ import {
     ACTIVATION_FAIL
 
 } from './types';
+import {toastify} from 'react-toastify'; 
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 export const checkAuthenticated = () => async dispatch => {
@@ -117,13 +118,13 @@ export const login = (email,password)=>async dispatch =>{
 
 
 };
-export const signup = (first_name, last_name, email, password, re_password,user_types)=>async dispatch =>{
+export const signup = (first_name, last_name, email, password, re_password,user_types,gender,course_id,session_year_id)=>async dispatch =>{
     const config ={
         headers:{
             'content-type':'application/json'
         }
     };
-    const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password});
+    const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password,gender,course_id,session_year_id});
     try{
         
         const res = await axios.post(`http://localhost:8000/auth/users/`,body,config);

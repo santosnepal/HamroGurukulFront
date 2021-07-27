@@ -71,9 +71,6 @@ return(
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
-                    <th>Address</th>
-                    <th>Last Login</th>
-                    <th>Date Joined</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -84,9 +81,6 @@ return(
                       <td> {staff.first_name} </td>
                       <td> {staff.last_name} </td>
                       <td> {staff.email} </td>
-                      <td> {staff.address?staff.address:`N/A`} </td>
-                      <td> {staff.last_login?staff.last_login:`N/A`} </td>
-                      <td> {staff.date_joined?staff.date_joined:`N/A`} </td>
                       <td><Link to="#" className="btn btn-success">Edit</Link></td>
                       </tr>
                     )):<tr>
@@ -94,10 +88,7 @@ return(
                         <td>N/A</td>
                         <td>N/A</td>
                         <td>N/A</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
+                        
                         <td><Link to="#" className="btn btn-success">Edit</Link></td>
                       </tr>}
                     

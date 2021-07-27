@@ -8,9 +8,24 @@ import axios from 'axios';
 
 
 const StaffLeaveAdmin = ({logout,isAuthenticated  })=>{
-  const [leaves,updateLeaves] = useState([]);
-  const [staffs,updateStaffs] = useState([]);
-  
+  const [leave,updateLeave] = useState([]);
+  const [staff,updateStaff] = useState([]);
+  const LoadData=async ()=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const dataS= await axios.get("http://127.0.0.1:8000/api/getstaffleave",config);
+  const data= await axios.get("http://127.0.0.1:8000/api/suser/2",config);
+  updateLeave(dataS);
+  updateStaff(data);
+  }
+  useEffect(async ()=>{
+    LoadData();
+  },[])
 return(
 <div>
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -42,24 +57,29 @@ return(
                     <th>Leave Message</th>
                     <th>Apply On</th>
                     <th>Action</th>
-                  </tr><tr>
-                    <td> leave.id </td>
-                    <td> leave.staff_id.admin.id </td>
-                    <td> leave.staff_id.admin.first_name   leave.staff_id.admin.last_name </td>
-                    <td> leave.leave_date </td>
-                    <td> leave.leave_message </td>
-                    <td> leave.created_at </td>
-                    <td>
-                     
-                      <Link to="#" className="btn btn-success">Approve</Link>
-                      <Link  className="btn btn-danger" to="#">Disapprove</Link>
-                      
-                      <button className="btn btn-warning" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Approved</button>
-                      
-                      <button className="btn btn-danger" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Disapproved</button>
-                     
+                  </tr>{leave.data?leave.data.map(leaves=>(
+                    <tr>
+                    <td> {leaves.id} </td>
+                    <td> {leaves.staff_id} </td>
+                    <td> {staff.data?staff.data.map(staff=>(
+                      leaves.staff_id===staff.id?`${staff.first_name} ${staff.last_name}`:``
+                    )):`N/A`} </td>
+                    <td> {leaves.leave_date} </td>
+                    <td> {leaves.leave_message} </td>
+                    <td> {leaves.created_at} </td>
+                    <td>{leaves.leave_status===0?
+                    <Link to="#" className="btn btn-success">Approve</Link>:
+                    <Link  className="btn btn-danger" to="#">Disapprove</Link>}
                     </td>
-                  </tr></tbody></table>
+                  </tr>
+                  )):<tr>
+                    <td> id </td>
+                    <td> id </td>
+                    <td> first_name   last_name </td>
+                    <td> leave_date </td>
+                    <td> leave_message </td>
+                    <td> created_at </td>
+                    </tr>}</tbody></table>
             </div>
           </div>
           {/* /.card */}
