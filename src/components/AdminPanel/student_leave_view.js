@@ -5,6 +5,7 @@ import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
 import axios from 'axios';
+import {toast} from 'react-toastify';
 
 const StudentLeaveAdmin = ({logout,isAuthenticated  })=>{
   const [leave,updateLeave] = useState([]);
@@ -21,6 +22,56 @@ const StudentLeaveAdmin = ({logout,isAuthenticated  })=>{
   const data= await axios.get("http://127.0.0.1:8000/api/suser/3",config);
   updateLeave(dataS);
   updateStudent(data);
+  }
+
+  const approve = async (who)=>{
+    console.log(who);
+    const {created_at,id,leave_date,leave_message,student_id,updated_at} = who;
+   const  leave_status = 1;
+    const body =JSON.stringify({created_at,id,leave_date,leave_message,student_id,updated_at,leave_status});
+    console.log(body);
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const res = await axios.put(`http://127.0.0.1:8000/api/editstudentleave/${id}`,body,config);
+  if(res.status===200){
+    toast.success(`Leave approved Success`);
+    console.log(res.data);
+    LoadData();
+
+  }
+  else{
+    toast.error(`Leave cannot be approved`);
+  }
+
+  }
+  const reject = async(who)=>{
+    //console.log(who);
+    const {created_at,id,leave_date,leave_message,student_id,updated_at} = who;
+   const  leave_status = 2;
+    const body =JSON.stringify({created_at,id,leave_date,leave_message,student_id,updated_at,leave_status});
+    console.log(body);
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const res = await axios.put(`http://127.0.0.1:8000/api/editstudentleave/${id}`,body,config);
+  if(res.status===200){
+    toast.success(`Leave Rejection Success`);
+    console.log(res.data);
+    LoadData();
+
+  }
+  else{
+    toast.error(`Leave cannot be Rejected`);
+  }
   }
   useEffect(async ()=>{
     LoadData();
@@ -67,9 +118,10 @@ return(
                     <td> {leaves.leave_date} </td>
                     <td> {leaves.leave_message} </td>
                     <td> {leaves.created_at} </td>
-                    <td>{leaves.leave_status===0?
-                    <Link to="#" className="btn btn-success">Approve</Link>:
-                    <Link  className="btn btn-danger" to="#">Disapprove</Link>}
+                    <td>
+                    <button disabled={leaves.leave_status===1} className="btn btn-success" type="button" onClick={()=>approve(leaves)}>Approve</button>
+                    <button disabled={leaves.leave_status===2} className="btn btn-danger" type="button" onClick={()=>reject(leaves)}>Reject</button>
+                    
                     </td>
                   </tr>
                   )):<tr>
