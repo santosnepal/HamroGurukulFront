@@ -14,7 +14,7 @@ const AdminSideBar=()=>{
   return(
 
 <div >
-  <aside className="main-sidebar sidebar-dark-primary elevation-4" style={trystyle}>
+  <aside className="main-sidebar sidebar-dark-primary elevation-4" >
   
     <div className="container-fluid">
     <a href className="brand-link">

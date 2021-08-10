@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import StudentBase from './base_template';
 import Footer from './footer';
+import store from '../../store';
+import axios from 'axios';
+const loadUserid=()=>{
+  const  state=store.getState();
+  return(state.auth.user.id);
+ }
 const StudentNotification = ({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
+  const [notifications,updateNotification]= useState([]);
+  const LoadData = async ()=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
   };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
+  const noti = await axios.get(`http://127.0.0.1:8000/api/getstudentnotification/${loadUserid()}`,config);
+  updateNotification(noti);
   }
+  useEffect(()=>{
+    LoadData();
+  },[])
 return(
 <div>
 <div className="hold-transition sidebar-mini layout-fixed">
   <StudentBase/>
   </div>
   <div className="content-wrapper">
+<div>
+  
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -33,38 +43,48 @@ return(
               <h3 className="card-title">All Notifications</h3>
               <div className="card-tools">
                 <div className="input-group input-group-sm" style={{width: 150}}>
-                  <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                  {/* <input type="text" name="table_search" className="form-control float-right" placeholder="Search" /> */}
                   <div className="input-group-append">
-                    <button type="submit" className="btn btn-default"><i className="fas fa-search" /></button>
+                    <button type="submit" className="btn btn-default"></button>
                   </div>
                 </div>
               </div>
             </div>
-            {/* /.card-header */}
+            
             <div className="card-body table-responsive p-0">
-              {'{'}% for notification in notifications %{'}'}
-              {'{'}% endfor %{'}'}
+              
               <table className="table table-hover text-nowrap">
                 <thead>
                   <tr>
                     <th>Notifications</th>
+                    <th>Sent At</th>
                   </tr>
                 </thead>
                 <tbody><tr>
-                    <td>{'{'}{'{'} notification.message {'}'}{'}'}</td>
+                  {notifications.data?notifications.data.map(noti=>(
+                   < > 
+                     <td>{noti.message}</td>
+                    <td>{noti.created_at}</td>
+                   </>
+                  )):<tr><td>No Notification Avilable</td></tr>}
+                    
                   </tr></tbody>
               </table>
             </div>
-            {/* /.card-body */}
+            
           </div>
-          {/* /.card */}
+          
         </div>
       </div>
     </div>
   </section>
   </div>
-  <Footer/>
+      
 </div>
+    
+<Footer/>
+  </div>
+ 
 );
 }
 const mapStateToProps = state => ({

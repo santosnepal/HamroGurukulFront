@@ -46,15 +46,7 @@ const StudentSideBar=()=>{
               </p>
             </Link>
           </li>
-          <li className="nav-item">
-           
-            <Link to="/studentviewattendancedata" className="nav-link ">
-              <i className="nav-icon fas fa-th" />
-              <p>
-                Search Attendance
-              </p>
-            </Link>
-          </li>
+         
           <li className="nav-item">
              
             <Link to="/studentapplyleave" className="nav-link ">

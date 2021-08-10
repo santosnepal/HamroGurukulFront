@@ -1,161 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Footer from './Footer';
+import Base from './base_template';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import store from '../../store';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+const loadUserid=()=>{
+  const  state=store.getState();
+  return(state.auth.user.id);
+ }
 const FeedBack=({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
+  
+  const [history,updateHistory] = useState([]);
+
+  const LoadData=async()=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
   };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
+  const bhupu = await axios.get(`http://127.0.0.1:8000/api/getstafffeedback/${loadUserid()}`,config);
+  updateHistory(bhupu);
   }
+  const SendData=async ()=>{
+    
+    const feedback = document.getElementById("feedback_message").value;
+    const staff_id = loadUserid();
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const body = JSON.stringify({feedback,staff_id});
+  console.log(body);
+  const res = await axios.post("http://127.0.0.1:8000/api/addstafffeedback",body,config);
+  if(res.status===200){
+    
+    //toast.success(`New Subject ${subject_name} added sucessfully`);
+    toast.success(`Feeb Back added successfully`);
+    document.getElementById("feedback_message").value = "";
+    LoadData();
+  }
+  else{
+
+    toast.error(`Couldn't add feedback please try again later`);
+  }
+  }
+
+  useEffect(()=>{
+    LoadData();
+  },[])
+  
 return(
-  <div className="hold-transition sidebar-mini layout-fixed">
-      
-  <meta charSet="utf-8" />
-  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  {/* Tell the browser to be responsive to screen width */}
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
- 
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
-  
-  <div className="wrapper">
-    
-    <nav className="main-header navbar navbar-expand navbar-white navbar-light">
-     
-      <ul className="navbar-nav">
-        <li className="nav-item">
-          <a className="nav-link" data-widget="pushmenu" href="#"><i className="fas fa-bars" /></a>
-        </li>
-      </ul>
-      <h4 style={{marginLeft: 10, marginTop: 5}}>Gurukul | Staff Panel</h4>
-      <ul className="navbar-nav ml-auto">
-        
-        <li className="nav-item">
-        <a className="nav-link" href="/" onClick={logout_user} >
-            Logout
-          </a>
-        </li>
-      </ul>
-     
-    </nav>
-    
-    <aside className="main-sidebar sidebar-dark-primary elevation-4">
-
-<a href className="brand-link">
-  <strong>logo</strong>
-  <span className="brand-text font-weight-light">AdminLTE 3</span>
-</a>
-
-<div className="sidebar">
-  
-  <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-    <div className="image">
-      <strong>img</strong>
-    </div>
-    <div className="info">
-      <a href="{% url 'staff_profile' %}" className="d-block">User Name</a>
-    </div>
-  </div>
- 
-  <nav className="mt-2">
-    <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-      
-      <li className="nav-item" >
-      
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link  to="/staffhome" role="button">Home</Link> 
-          </p>
-        </a>
-        
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th"   />
-          <p>
-           <Link to="/safftakeattendance"> Take Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-       
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-            <Link to="/staffupdateattendance"> View Update Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="staffapplyleave"> Apply Leave </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="/stafffeedback"> Feedback </Link>
-           </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='staffaddresult'> Add Result</Link>
-          </p>
-        </a>
-      </li>
-      
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link  to='/staffeditresult' role="button">Edit Result</Link> 
-             
-          </p>
-        </a>
-      </li>
-      
-      
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="/staffnotification"> Notifications </Link>
-          </p>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  
+  <div >
+           <div className="hold-transition sidebar-mini  layout-fixed">
+  <Base/>
 </div>
 
-</aside>
-    
 <div className="content-wrapper">
 <div>
- Feedback Message
+
   <section className="content">
     <div className="container-fluid">
       <div className="row">
@@ -166,26 +76,22 @@ return(
               <h3 className="card-title">Leave a Feedback Message</h3>
             </div>
             
-            <form action="{% url 'staff_feedback_save' %}" method="post">
+            <div>
               <div className="card-body">
                 
                 <div className="form-group">
                   <label>Feedback Message</label>
-                  <textarea className="form-control" rows={6} name="feedback_msg" defaultValue={""} />
+                  <textarea className="form-control" id="feedback_message" rows={6} name="feedback_msg" defaultValue={""} />
                 </div>
                 <div className="form-group">
-                  
-                  <div className="alert alert-danger" style={{marginTop: 10}}> message </div>
                  
-                  <div className="alert alert-success" style={{marginTop: 10}}> message </div>
-                  
                 </div>
               </div>
               
               <div className="card-footer">
-                <button type="submit" className="btn btn-primary btn-block" id="fetch_student">Leave a Feedback Message</button>
+                <button type="submit" className="btn btn-primary btn-block" onClick={SendData}>Leave a Feedback Message</button>
               </div>
-            </form>
+            </div>
           </div>
           
           <div className="card card-primary">
@@ -199,11 +105,15 @@ return(
                     <th>ID</th>
                     <th>Feedback Message</th>
                     <th>Feedback Reply</th>
-                  </tr><tr>
-                    <td> row.id </td>
-                    <td> row.feedback </td>
-                    <td> row.feedback_reply </td>
-                  </tr></tbody></table>
+                  </tr>
+                  {history.data?history.data.map(his=>(
+                    <tr>
+                      <td>{his.id}</td>
+                      <td>{his.feedback}</td>
+                      <td>{his.feedback_reply}</td>
+                      </tr>
+                  )):<tr><td>No feedback  History found</td></tr>}
+                </tbody></table>
             </div>
           </div>
         </div>
@@ -217,7 +127,7 @@ return(
 <Footer/>
   </div>
  
-</div>
+
 
 );
 }

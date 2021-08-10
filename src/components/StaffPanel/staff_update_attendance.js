@@ -1,221 +1,261 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from './Footer';
-import {Link,Redirect } from 'react-router-dom';
+import Base from './base_template';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
-const UpdateAttendance=({logout,isAuthenticated  })=>{
-  const [redirect, setRedirect] = useState(false);
-  const logout_user = () => {
-      logout();
-      setRedirect(true);
-      
-  };
-  if(isAuthenticated ){
-    console.log("chor haina ma ");
-  } 
-  else{
-    
-    return <Redirect to="/"/>
+import axios from 'axios';
+import store from '../../store';
+import { toast } from 'react-toastify';
+const loadUserid = () => {
+  const state = store.getState();
+  return (state.auth.user.id);
+}
+const UpdateAttendance = ({ logout, isAuthenticated }) => {
+  const [subject, updateSubject] = useState([]);
+  const [sessionyear, updateSessionYear] = useState([]);
+  const [attendance, updateAttendance] = useState([]);
+  const [date, updateDate] = useState([]);
+  const [option, updateOption] = useState([]);
+  const [attendancereport, updateAttendancereport] = useState([]);
+  const [student, updatteStudent] = useState([]);
+  const LoadThirdData = async () => {
+    const attid = document.getElementById("attendance_date").value;
+    console.log(attid);
+    const config = {
+      headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+
+      }
+    };
+    const report = await axios.get(`http://127.0.0.1:8000/api/getattendancereport/${attid}`, config);
+    const students = await axios.get("http://127.0.0.1:8000/api/suser/3", config);
+    console.log(report);
+    updateAttendancereport(report);
+    updatteStudent(students);
+    const dataplace = document.getElementById("student_data");
+    dataplace.style.display = "inline";
+
   }
-return(
-  <div className="hold-transition sidebar-mini layout-fixed">
-      
-  <meta charSet="utf-8" />
-  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  {/* Tell the browser to be responsive to screen width */}
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
- 
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
-  
-  <div className="wrapper">
-    
-    <nav className="main-header navbar navbar-expand navbar-white navbar-light">
-     
-      <ul className="navbar-nav">
-        <li className="nav-item">
-          <a className="nav-link" data-widget="pushmenu" href="#"><i className="fas fa-bars" /></a>
-        </li>
-      </ul>
-      <h4 style={{marginLeft: 10, marginTop: 5}}>Gurukul | Staff Panel</h4>
-      <ul className="navbar-nav ml-auto">
-        
-        <li className="nav-item">
-        <a className="nav-link" href="/" onClick={logout_user} >
-            Logout
-          </a>
-        </li>
-      </ul>
-     
-    </nav>
-    
-    <aside className="main-sidebar sidebar-dark-primary elevation-4">
+  const LoadSecondData = async () => {
+    const seaaionid = document.getElementById("session_year_id").value;
+    const subid = document.getElementById("subject").value;
+    const config = {
+      headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
 
-<a href className="brand-link">
-  <strong>logo</strong>
-  <span className="brand-text font-weight-light">AdminLTE 3</span>
-</a>
+      }
+    };
+    const dates = await axios.get(`http://127.0.0.1:8000/api/getattendancedate/${subid}/${seaaionid}`);
+    updateDate(dates)
+    if (date.data) {
+      const thau = document.getElementById("attendance_block");
+      const mainthau = document.getElementById("error_attendance");
+      const thirddata = document.getElementById("fetch_student_block");
 
-<div className="sidebar">
-  
-  <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-    <div className="image">
-      <strong>img</strong>
-    </div>
-    <div className="info">
-      <a href="{% url 'staff_profile' %}" className="d-block">User Name</a>
-    </div>
-  </div>
- 
-  <nav className="mt-2">
-    <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-      
-      <li className="nav-item" >
-        
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='/staffhome'> Home</Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th"   />
-          <p>
-            <Link to='/stafftakeattendance'> Take Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-       
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='#'> View Update Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='staffapplyleave'> Apply Leave </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='stafffeedback'> Feedback </Link> 
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link to='staffaddresult'>  Add Result </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link to='staffeditresult'>  Edit Result </Link>
-          </p>
-        </a>
-      </li>
-      
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link to='staffnotification'>  Notifications </Link>
-          </p>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  
-</div>
+      const opt = date.data.map(dat => {
+        console.log(dat.id);
+        const aa = (<option value={dat.id}>{dat.attendance_date}</option>);
+        return aa;
 
-</aside>
-    
-<div className="content-wrapper">
-<div>
-  View Update Attendance
-  <section className="content">
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-12">
-          
-          <div className="card card-primary">
-            <div className="card-header">
-              <h3 className="card-title">View Update Attendance</h3>
-            </div>
-            
-            <div className="card-body">
-              <div className="form-group">
-                <label>Subject </label>
-                <select className="form-control" name="subject" id="subject">
-                  
-                  <option value="{{ subject.id }}">Subject Name</option>
-                  
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Session Year </label>
-                <select className="form-control" name="session_year_id" id="session_year_id">
-                  
-                  <option value="{{ session_year.id }}">Session Year</option>
-                 
-                </select>
-              </div>
-              <div className="form-group">
-                <button type="button" className="btn btn-primary btn-block" id="fetch_attendance">Fetch Attendance Date</button>
-              </div>
-              <div className="form-group" id="attendance_block" style={{display: 'none'}}>
-                <label>Attendance Date </label>
-                <select className="form-control" name="attendance_date" id="attendance_date">
-                </select>
-              </div>
-              <div className="form-group">
-                <div className="alert alert-danger" id="error_attendance" style={{display: 'none'}}>
+
+      })
+      updateOption(opt);
+      console.log(option);
+      if (option) {
+        thau.style.display = "flex";
+        thirddata.style.display = "flex";
+      }
+      else {
+        mainthau.style.display = "flex";
+      }
+
+
+    }
+
+  }
+  const LoadFirstdata = async () => {
+    const config = {
+      headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+
+      }
+    };
+    const subjects = await axios.get("http://127.0.0.1:8000/api/viewsubject", config);
+    const sessionyears = await axios.get("http://127.0.0.1:8000/api/viewsessionyear", config);
+    const attendances = await axios.get("http://127.0.0.1:8000/api/getattendance", config);
+    updateAttendance(attendances)
+    updateSubject(subjects);
+    updateSessionYear(sessionyears);
+  }
+  const updateAttendancef =  async (atrp,nv)=>{
+    const config = {
+      headers: {
+        //'X-CSRFToken': Cookies.get('csrftoken'),
+        'Accept': 'application/json',
+        'Authorization': `JWT ${localStorage.getItem("access")}`,
+        'Content-Type': 'application/json',
+
+      }
+    };
+    console.log(atrp,nv);
+    atrp.status=nv;
+    const res = await axios.put(`http://127.0.0.1:8000/api/editattendance/${atrp.id}`,atrp,config);
+    if(res.status===200){
+      toast.success(`Attendance updated success`);
+      document.getElementById(`${atrp.id}`).checked=false;
+      LoadThirdData();
+    }
+    else{
+      toast.error(`Sprry update cant be done now try again later`);
+
+    }
+  }
+  useEffect(() => {
+    LoadFirstdata();
+  }, []);
+
+  return (
+    <div>
+      <div className="hold-transition sidebar-mini  layout-fixed">
+
+        <Base />
+
+
+      </div>
+      <div className="content-wrapper">
+        <section className="content">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-12">
+                {/* general form elements */}
+                <div className="card card-primary">
+                  <div className="card-header">
+                    <h3 className="card-title">View Attendance</h3>
+                  </div>
+                  {/* /.card-header */}
+                  {/* form start */}
+                  <div className="card-body">
+                    <div className="form-group">
+                      <label>Subject </label>
+                      <select className="form-control" name="subject" id="subject">
+                        {attendance.data ? attendance.data.map(att => (
+                          subject.data ? subject.data.map(sub => (
+                            sub.id === att.subject_id ? <option id="sub" value={att.subject_id}>{sub.subject_name}</option> : null
+                          )) : null
+                        )) : <option>N/A</option>}
+
+
+
+
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Session Year </label>
+                      <select className="form-control" name="session_year_id" id="session_year_id">
+                        {attendance.data ? attendance.data.map(att => (
+                          sessionyear.data ? sessionyear.data.map(syr => (
+                            syr.id === att.session_year_id ? <option id="sesionyr" value={att.session_year_id}>{syr.session_start_year} {syr.session_end_year}</option> : null
+                          )) : null
+                        )) : <option>N/A</option>}
+
+
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <button type="button" className="btn btn-primary btn-block" id="fetch_attendance" onClick={LoadSecondData}>Fetch Attendance Date</button>
+                    </div>
+                    <div className="form-group" id="attendance_block" style={{ display: 'none' }}>
+                      <label>Attendance Date </label>
+                      <select className="form-control" name="attendance_date" id="attendance_date">
+                        {option ? option.map(op => {
+                          return op;
+
+                        }) : <option>N/A</option>}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <div className="alert alert-danger" id="error_attendance" style={{ display: 'none' }}>
+                      </div>
+                    </div>
+                    <div className="form-group" id="fetch_student_block" style={{ display: 'none' }}>
+                      <button type="button" onClick={LoadThirdData} className="btn btn-primary btn-block" id="fetch_student">Fetch Student Data</button>
+                    </div>
+                  </div>
+                  {/* /.card-body */}
+                  <div id="student_data" className="card-footer" style={{ display: 'none' }}>
+                    <div className="table">
+                      <table className="table">
+                      </table>
+                      <tbody>
+                        <tr>
+                          <th>
+                            Student Name
+                          </th>
+
+                          <th>
+                           previous Status
+                          </th>
+                          <th>
+                            New Status
+                          </th>
+                          <th>
+                            Action
+                          </th>
+                        </tr>
+                        {attendancereport.data?
+                        attendancereport.data.map(attrp=>(
+                          student.data?
+                          student.data.map(std=>(
+                            std.id===attrp.student_id?
+                            <tr>
+                            <td>
+                              {std.first_name} {std.last_name}
+                            </td>
+                            <td>
+                              {attrp.status===true?'Present':'Absent'}
+                            </td>
+                            <td>
+                            <input type="checkbox" id={`${attrp.id}`} name="present"/>Present
+                            </td>
+                            <td>
+                            <button className="btn-primary" id="description" onClick={()=>updateAttendancef(attrp,document.getElementById(`${attrp.id}`).checked?`true`:`false`)} >update</button>
+
+                            </td>
+                            </tr>
+
+                            :null
+
+                          ))
+                          :<td>No Students attendance data avilable</td>
+                        ))
+                        :<td>No Attemdance data Avilable For Selected date</td>}
+                      </tbody>
+
+                    </div>
+                  </div>
                 </div>
+                {/* /.card */}
               </div>
-              <div className="form-group" id="fetch_student_block" style={{display: 'none'}}>
-                <button type="button" className="btn btn-primary btn-block" id="fetch_student">Fetch Student Data</button>
-              </div>
-            </div>
-            
-            <div id="student_data" className="card-footer">
             </div>
           </div>
-          
-        </div>
+        </section>
       </div>
+      <Footer />
     </div>
-  </section>
-  
-</div>
-</div>
-    
-<Footer/>
-  </div>
- 
-</div>
 
-);
+  );
 }
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
-export default connect( mapStateToProps, { logout })(UpdateAttendance);
+export default connect(mapStateToProps, { logout })(UpdateAttendance);

@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rm -rf auth_try_back/build && react-scripts build && cp -r build auth_try_back/build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

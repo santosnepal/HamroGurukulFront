@@ -33,7 +33,7 @@ const AdminViewAttendance = ({logout,isAuthenticated  })=>{
   updateAttendancereport(report);
   updatteStudent(students);
   const dataplace = document.getElementById("student_data");
-  dataplace.style.display = "flex";
+  dataplace.style.display = "inline";
 
   }
   const LoadSecondData=async ()=>{

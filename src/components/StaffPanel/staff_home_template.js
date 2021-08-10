@@ -1,10 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Footer from './Footer';
+import Base from './base_template';
 import {Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import store from '../../store';
+import axios from 'axios';
+const loadUserid=()=>{
+  const  state=store.getState();
+  return(state.auth.user.id);
+ }
 const StaffHome = ({logout,isAuthenticated  })=>{
+  const loadData=async ()=>{
+    const stores = store.getState()
+    updateWho(stores);
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+  const students = await axios.get("http://127.0.0.1:8000/api/suser/3",config);
+  const subject = await axios.get(`http://127.0.0.1:8000/api/viewsubject/${loadUserid()}`,config)
+  updateStudents(students.data.length);
+  updatesubject(subject.data.length);
+  console.log(subject);
+  }
+  useEffect(async ()=>{
+   
+    loadData();
+    console.log(who);
+    
+  },[])
+  
   const [redirect, setRedirect] = useState(false);
+  const [subject,updatesubject] = useState([]);
+  const [students,updateStudents] = useState([]);
+  const [who,updateWho] = useState([]);
+
   const logout_user = () => {
       logout();
       setRedirect(true);
@@ -17,145 +51,14 @@ const StaffHome = ({logout,isAuthenticated  })=>{
     
     return <Redirect to="/"/>
   }
+ 
 
 return (
  
   <div>
-  <div className="hold-transition sidebar-mini layout-fixed">
-      
-  <meta charSet="utf-8" />
-  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  {/* Tell the browser to be responsive to screen width */}
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
- 
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
-  
-  <div className="wrapper">
-    
-    <nav className="main-header navbar navbar-expand navbar-white navbar-light">
-     
-      <ul className="navbar-nav">
-        <li className="nav-item">
-          <a className="nav-link" data-widget="pushmenu" href="#"><i className="fas fa-bars" /></a>
-        </li>
-      </ul>
-      <h4 style={{marginLeft: 10, marginTop: 5}}>Gurukul | Staff Panel</h4>
-      <ul className="navbar-nav ml-auto">
-        
-        <li className="nav-item">
-          <a className="nav-link" href="/" onClick={logout_user} >
-            Logout
-          </a>
-        </li>
-      </ul>
-     
-    </nav>
-    
-    <aside className="main-sidebar sidebar-dark-primary elevation-4">
-
-<a href >
-  <strong>logo</strong>
-  <span className="brand-text font-weight-light">AdminLTE 3</span>
-</a>
-
-<div className="sidebar">
-  
-  <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-    <div className="image">
-      <strong>img</strong>
-    </div>
-    <div className="info">
-      <a href="{% url 'staff_profile' %}" className="d-block">User Name</a>
-    </div>
-  </div>
- 
-  <nav className="mt-2">
-    <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-      
-      <li className="nav-item" >
-      
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link  to="/staffhome" role="button">Home</Link> 
-          </p>
-        </a>
-        
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link " >
-          <i className="nav-icon fas fa-th"   />
-          <p>
-           <Link to="/safftakeattendance"> Take Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-       
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-            <Link to="/staffupdateattendance"> View Update Attendance </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="staffapplyleave"> Apply Leave </Link>
-          </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="/stafffeedback"> Feedback </Link>
-           </p>
-        </a>
-      </li>
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to='staffaddresult'> Add Result</Link>
-          </p>
-        </a>
-      </li>
-      
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-          <Link  to='/staffeditresult' role="button">Edit Result</Link> 
-             
-          </p>
-        </a>
-      </li>
-      
-      
-      <li className="nav-item">
-        
-        <a href="#" className="nav-link ">
-          <i className="nav-icon fas fa-th" />
-          <p>
-           <Link to="/staffnotification"> Notifications </Link>
-          </p>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  
+  <div className="hold-transition sidebar-mini  layout-fixed">
+  <Base/>
 </div>
-
-</aside>
-    
 <div className="content-wrapper">
 <div>
   <section className="content">
@@ -165,7 +68,7 @@ return (
           
           <div className="small-box bg-info">
             <div className="inner">
-              <h3> students_count</h3>
+              <h3> {students}</h3>
               <p>Student Under me</p>
             </div>
             <div className="icon">
@@ -208,7 +111,7 @@ return (
           <div className="small-box bg-danger">
             <div className="inner">
               <h3> subject_count</h3>
-              <p>Total Subjects</p>
+              <p>{subject}</p>
             </div>
             <div className="icon">
               <i className="ion ion-stats-bars" />
@@ -284,9 +187,7 @@ return (
     <Footer/>
   </div>
   
-</div>
-  
-</div>
+
 
 );
 }
