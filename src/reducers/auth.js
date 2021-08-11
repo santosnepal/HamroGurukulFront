@@ -103,10 +103,6 @@ export default function foo(state = initialState,action){
         case PASSWORD_RESET_CONFIRM_SUCCESS:
         case PASSWORD_RESET_CONFIRM_FAIL:
         case SIGNUP_SUCCESS:
-            return {
-                ...state,
-                isAuthenticated: false
-            }
         case SIGNUP_FAIL:
         case ACTIVATION_SUCCESS:
         case ACTIVATION_FAIL:

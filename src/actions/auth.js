@@ -118,13 +118,14 @@ export const login = (email,password)=>async dispatch =>{
 
 
 };
-export const signup = (first_name, last_name, email, password, re_password,user_types,gender,course_id,session_year_id)=>async dispatch =>{
+export const signup = (first_name, last_name, email, password, re_password,user_types,gender,course,session_year_id)=>async dispatch =>{
     const config ={
         headers:{
             'content-type':'application/json'
         }
     };
-    const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password,gender,course_id,session_year_id});
+    const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password,gender,course,session_year_id});
+    console.log(body);
     try{
         
         const res = await axios.post(`http://localhost:8000/auth/users/`,body,config);
@@ -132,8 +133,8 @@ export const signup = (first_name, last_name, email, password, re_password,user_
             type:SIGNUP_SUCCESS,
             payload:res.data
         });
-        dispatch(load_user());
-
+        // dispatch(load_user());
+        console.log(res.data);
     }catch(err){
         console.log(err);
         dispatch({

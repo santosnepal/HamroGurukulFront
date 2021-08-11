@@ -20,7 +20,7 @@ const Signup = ({ signup, isAuthenticated }) => {
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
-        alert("muji");
+       
         e.preventDefault();
 
         if (password === re_password) {

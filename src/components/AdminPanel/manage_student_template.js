@@ -9,6 +9,7 @@ import Footer from './footer';
 
 const ManageStudent = ({logout,isAuthenticated  })=>{
   const [students,updateStudents] = useState([]);
+  const [courses,updateCourses] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const logout_user = () => {
       logout();
@@ -17,7 +18,10 @@ const ManageStudent = ({logout,isAuthenticated  })=>{
   };
   const LoadData= async ()=>{
     const dataS= await axios.get("http://127.0.0.1:8000/api/suser/3");
+    const course = await axios.get("http://127.0.0.1:8000/api/viewcourses");
+    updateCourses(course);
     console.log("Hey ia m called");
+    console.log(dataS);
 updateStudents(dataS);
 };
 useEffect(() => {
@@ -67,13 +71,8 @@ return(
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
-                    <th>Address</th>
                     <th>Gender</th>
-                    <th>Profile Pic</th>
-                    <th>Session Year</th>
                     <th>Course</th>
-                    <th>Last Login</th>
-                    <th>Date Joined</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -84,13 +83,10 @@ return(
                       <td>{student.first_name?student.first_name:`N/A`} </td>
                       <td>{student.last_name?student.last_name:`N/A`} </td>
                       <td>{student.email?student.email:`N/A`} </td>
-                      <td>{student.address?student.address:`N/A`} </td>
-                      <td>{student.gender?student.gender:`N/A`} </td>
-                      <td>N/A</td>
-                      <td>{student.Session_start_to_end?student.Session_start_to_end:`N/A`} </td>
-                      <td>{student.course_name?student.course_name:`N/A`} </td>
-                      <td>{student.last_login?student.last_login:`N/A`} </td>
-                      <td>{student.date_joined?student.date_joined:`N/A`} </td>
+                      <td>{student.gender===0?`M`:`F`} </td>
+                      <td>{courses.data?courses.data.map(csr=>(
+                        csr.id==student.course?csr.course_name:null
+                      )):`N/A`} </td>
                       <td><Link to="#" className="btn btn-success">Edit</Link></td>
                       </tr>
                     )):<tr>
