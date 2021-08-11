@@ -61,11 +61,11 @@ const AddSubject = ({logout,isAuthenticated  })=>{
   if(res.status===200){
     
     //toast.success(`New Subject ${subject_name} added sucessfully`);
-    toast.success(`${res.data}`);
+    toast.success(`Subject Added succesfully`);
   }
   else{
 
-    toast.error(`Couldn't add ${subject_name} please try again later`);
+    toast.error(`Couldn't add subject please try again later`);
   }
 
 };

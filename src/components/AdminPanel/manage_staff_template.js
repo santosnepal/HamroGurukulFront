@@ -6,6 +6,7 @@ import AdminBase from './base_template';
 import Footer from './footer';
 import axios from 'axios';
 import {toast} from 'react-toastify';
+import Swal from 'sweetalert2';
 
 
 const ManageStaffs = ({logout,isAuthenticated  })=>{
@@ -132,6 +133,55 @@ const ManageStaffs = ({logout,isAuthenticated  })=>{
 
     )
   }
+  const warning =(props)=>{
+    const config ={
+      headers:{
+          'content-type':'application/json',
+          'Authorization': `JWT ${localStorage.getItem("access")}`,
+          'Accept':'application/json'
+      }
+  };
+    console.log(props);
+    Swal.fire({  
+     
+      title: 'Are you sure?',  
+      text: 'Subject and its all related data will be removed',  
+      icon: 'warning',  
+      showCancelButton: true,  
+      confirmButtonColor: '#3085d6',  
+      cancelButtonColor: '#d33',  
+      confirmButtonText: 'Yes!'  
+    }).then(
+      function async () { 
+        /*Your Code Here*/
+      console.log(props); 
+       axios.delete(`http://127.0.0.1:8000/api/deleteuser/${props.id}`,config).then((res)=>{
+        if(res.data==="200ok"){
+          Swal.fire({  
+            position: 'top-end',  
+            icon: 'success',  
+            title: 'Student Removed successsfully',  
+            showConfirmButton: false,  
+            timer: 1500  
+          }); 
+          LoadData();
+        }
+        else{
+          Swal.fire({  
+            position: 'top-end',  
+            icon: 'error',  
+            title: 'Student Removed failed ',  
+            showConfirmButton: false,  
+            timer: 1500  
+          }); 
+          LoadData();
+        }
+         
+       })
+      //console.log(res);
+    },
+    );
+  }
 return(
 <div id = "main">
 <div className="hold-transition sidebar-mini  layout-fixed">
@@ -177,7 +227,8 @@ return(
                       <td> {staff.first_name} </td>
                       <td> {staff.last_name} </td>
                       <td> {staff.email} </td>
-                      <td><button onClick={showModel=true, ()=>trys(staff)} data-toggle="modal" data-target="#myModal" className="btn btn-success">Edit</button></td>
+                      <td><button onClick={showModel=true, ()=>trys(staff)} data-toggle="modal" data-target="#myModal" className="btn btn-success mr-3">Edit</button>
+                      <button onClick={()=>warning(staff)} className="btn btn-danger">Remove</button></td>
                       </tr>
                     )):<tr>
                         <td>N/A</td>

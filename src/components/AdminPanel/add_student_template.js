@@ -19,11 +19,11 @@ const AddStudent = ({signup,isAuthenticated  })=>{
       re_password: '',
       user_types:'',
       gender :'',
-      course:''
+      
      
   });
 
-  const { first_name, last_name, email, password, re_password,user_types ,gender,course} = formData;
+  const { first_name, last_name, email, password, re_password,user_types ,gender} = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -31,7 +31,7 @@ const AddStudent = ({signup,isAuthenticated  })=>{
       e.preventDefault();
       console.log(first_name, last_name, email, password, re_password,user_types ,gender)
       if (password === re_password) {
-          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','3',gender,course);
+          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','3',gender);
           setAccountCreated(true);
       }
   };
@@ -112,21 +112,7 @@ return(
                         required
                     />
                </div>
-               <div className='form-group'>
-               <select className='form-control' id = 'course'
-                 name="course"
-                   onChange={(e)=>{
-                    console.log(e.target.value ,e.target.name);
-                    setFormData({...formData, [e.target.name]: e.target.value });
-                    console.log(formData);
-                  }}
-                 >
-                   <option>Select Courses</option>
-                   {courses.data?courses.data.map(csr=>(
-                     <option value={csr.id}>{csr.course_name}</option>
-                   )):<option>N/A</option>}
-                 </select>
-                </div>
+               
                
                <div className='form-group'>
                  <select className='form-control' id = 'gender'
