@@ -5,8 +5,10 @@ import { logout } from '../../actions/auth';
 import AdminBase from './base_template';
 import Footer from './footer';
 import { signup } from '../../actions/auth';
+import axios from 'axios';
+import {toast} from 'react-toastify';
 
-const AddStaff = ({signup,isAuthenticated  })=>{
+const AddStaff =  ({signup,isAuthenticated  })=>{
   const [accountCreated, setAccountCreated] = useState(false);
   const [formData, setFormData] = useState({
       first_name: '',
@@ -19,16 +21,35 @@ const AddStaff = ({signup,isAuthenticated  })=>{
       
   });
 
-  const { first_name, last_name, email, password, re_password,user_types,gender,course_id,session_year_id } = formData;
+  let { first_name, last_name, email, password, re_password,user_types,gender,course_id,session_year_id } = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
       e.preventDefault();
 
       if (password === re_password) {
-          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2',gender,'0','0');
-          setAccountCreated(true);
+        const config ={
+          headers:{
+              'content-type':'application/json'
+          }
+      };
+      user_types=2;
+      password="P@$$w0rd123";
+      re_password="P@$$w0rd123"
+      const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password,gender,session_year_id});
+      const res = await axios.post(`http://localhost:8000/auth/users/`,body,config);
+          // signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2',gender,'0','0');
+          // setAccountCreated(true);
+      console.log(res)
+        if(res.status===201){
+          toast.success('New Staff Added Succesfully ');
+          console.log(res);
+        }
+        else{
+          toast.error(`Could'nt add new Staff`);
+        }
+
       }
   };
 return(

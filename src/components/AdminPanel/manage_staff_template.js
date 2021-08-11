@@ -160,7 +160,7 @@ const ManageStaffs = ({logout,isAuthenticated  })=>{
           Swal.fire({  
             position: 'top-end',  
             icon: 'success',  
-            title: 'Student Removed successsfully',  
+            title: 'Staff Removed successsfully',  
             showConfirmButton: false,  
             timer: 1500  
           }); 
@@ -170,7 +170,7 @@ const ManageStaffs = ({logout,isAuthenticated  })=>{
           Swal.fire({  
             position: 'top-end',  
             icon: 'error',  
-            title: 'Student Removed failed ',  
+            title: 'Staff Removed failed ',  
             showConfirmButton: false,  
             timer: 1500  
           }); 

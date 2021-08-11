@@ -6,6 +6,7 @@ import AdminBase from './base_template';
 import Footer from './footer';
 import { signup } from '../../actions/auth';
 import axios from 'axios';
+import {toast} from 'react-toastify';
 
 const AddStudent = ({signup,isAuthenticated  })=>{
   const [accountCreated, setAccountCreated] = useState(false);
@@ -23,16 +24,35 @@ const AddStudent = ({signup,isAuthenticated  })=>{
      
   });
 
-  const { first_name, last_name, email, password, re_password,user_types ,gender} = formData;
+  let { first_name, last_name, email, password, re_password,user_types,gender} = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
       e.preventDefault();
       console.log(first_name, last_name, email, password, re_password,user_types ,gender)
       if (password === re_password) {
-          signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','3',gender);
-          setAccountCreated(true);
+        const config ={
+          headers:{
+              'content-type':'application/json'
+          }
+      };
+      user_types=3;
+      password="P@$$w0rd123";
+      re_password="P@$$w0rd123"
+      const body=JSON.stringify({email,first_name,last_name,user_types,password,re_password,gender});
+      const res = await axios.post(`http://localhost:8000/auth/users/`,body,config);
+          // signup(first_name, last_name, email, 'P@$$w0rd123', 'P@$$w0rd123','2',gender,'0','0');
+          // setAccountCreated(true);
+      console.log(res)
+        if(res.status===201){
+          toast.success('New Student Added Succesfully ');
+          console.log(res);
+        }
+        else{
+          toast.error(`Could'nt add new Student`);
+        }
+
       }
   };
 const LoadData =async ()=>{
